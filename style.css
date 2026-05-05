@@ -1,6 +1,6 @@
 :root {
     --color-bg: #0b0b0b;
-    --color-text-gold: #d4c5a0;
+    --color-gold: #d4c5a0;
     --font-sans: 'Montserrat', sans-serif;
 }
 
@@ -12,7 +12,7 @@
 
 body {
     background: var(--color-bg);
-    color: var(--color-text-gold);
+    color: var(--color-gold);
     font-family: var(--font-sans);
     width: 100vw;
     height: 100vh;
@@ -26,40 +26,44 @@ body {
     top: 0;
     left: 0;
     pointer-events: none;
-    z-index: 9999;
+    z-index: 99;
     opacity: 0;
-    will-change: transform;
+    will-change: transform, width, height;
+    box-shadow: 0 0 0 100vmax rgba(20, 22, 28, 0.88);
+    border-radius: 2px;
 }
 
 .cursor__corner {
     position: absolute;
-    width: 18px;
-    height: 18px;
-    border-color: rgba(255, 255, 255, 0.85);
+    width: 24px;
+    height: 24px;
+    border-color: var(--color-gold);
     border-style: solid;
+    transition: none;
+    will-change: transform, opacity;
 }
 
 .cursor__corner--tl {
-    top: 0;
-    left: 0;
+    top: -1px;
+    left: -1px;
     border-width: 1px 0 0 1px;
 }
 
 .cursor__corner--tr {
-    top: 0;
-    right: 0;
+    top: -1px;
+    right: -1px;
     border-width: 1px 1px 0 0;
 }
 
 .cursor__corner--bl {
-    bottom: 0;
-    left: 0;
+    bottom: -1px;
+    left: -1px;
     border-width: 0 0 1px 1px;
 }
 
 .cursor__corner--br {
-    bottom: 0;
-    right: 0;
+    bottom: -1px;
+    right: -1px;
     border-width: 0 1px 1px 0;
 }
 
@@ -76,35 +80,9 @@ body {
 }
 
 
-/* ==================== OVERLAYS ==================== */
-/* On empile deux divs colorées avec mix-blend-mode pour créer
-   l'effet gris/sepia/violet. C'est BEAUCOUP plus rapide que 
-   backdrop-filter car ce sont juste des divs avec une couleur unie.
-   Un trou est percé via clip-path dans chacune pour révéler la couleur. */
-
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-}
-
-/* 1. Désaturation : un gris moyen en mode "saturation" retire les couleurs */
-.overlay--desat {
-    background-color: #808080;
-    mix-blend-mode: saturation;
-    z-index: 1;
-}
-
-/* 2. Teinte : un violet sombre en mode "multiply" ajoute la teinte Camera Raw */
-.overlay--tint {
-    background-color: #2a2035;
-    mix-blend-mode: multiply;
-    z-index: 2;
-}
-
+/* ==================== OVERLAYS (REMOVED FOR PERFORMANCE) ==================== */
+/* L'effet de filtre sombre est maintenant géré par le box-shadow du curseur,
+   ce qui est environ 100x plus performant pour le navigateur. */
 
 /* ==================== HEADER ==================== */
 .header {
@@ -112,8 +90,84 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 2.5rem 0;
-    z-index: 10;
+    padding: 3.5rem 0;
+    z-index: 105;
+}
+
+/* ==================== ORNAMENTAL FRAME ==================== */
+.site-frame {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.site-frame__line {
+    position: absolute;
+    background: rgba(212, 197, 160, 0.45);
+}
+
+.site-frame__line--t {
+    top: 0;
+    left: 15px;
+    right: 15px;
+    height: 1px;
+}
+
+.site-frame__line--b {
+    bottom: 0;
+    left: 15px;
+    right: 15px;
+    height: 1px;
+}
+
+.site-frame__line--l {
+    left: 0;
+    top: 15px;
+    bottom: 15px;
+    width: 1px;
+}
+
+.site-frame__line--r {
+    right: 0;
+    top: 15px;
+    bottom: 15px;
+    width: 1px;
+}
+
+.site-frame__corner {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-color: rgba(212, 197, 160, 0.45);
+    border-style: solid;
+}
+
+.site-frame__corner--tl {
+    top: 0;
+    left: 0;
+    border-width: 0 1px 1px 0;
+}
+
+.site-frame__corner--tr {
+    top: 0;
+    right: 0;
+    border-width: 0 0 1px 1px;
+}
+
+.site-frame__corner--bl {
+    bottom: 0;
+    left: 0;
+    border-width: 1px 1px 0 0;
+}
+
+.site-frame__corner--br {
+    bottom: 0;
+    right: 0;
+    border-width: 1px 0 0 1px;
 }
 
 .nav__list {
@@ -152,7 +206,7 @@ body {
 }
 
 .nav__link {
-    color: var(--color-text-gold);
+    color: var(--color-gold);
     text-decoration: none;
     font-size: 0.8rem;
     font-weight: 600;
@@ -175,7 +229,7 @@ body {
     bottom: 3rem;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 5;
+    z-index: 105;
     pointer-events: none;
 }
 

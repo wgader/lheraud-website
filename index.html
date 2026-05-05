@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +10,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <!-- Custom cursor viewfinder -->
+    <!-- Ornamental Frame (Cadre de peinture) -->
+    <div class="site-frame">
+        <div class="site-frame__line site-frame__line--t"></div>
+        <div class="site-frame__line site-frame__line--b"></div>
+        <div class="site-frame__line site-frame__line--l"></div>
+        <div class="site-frame__line site-frame__line--r"></div>
+        <div class="site-frame__corner site-frame__corner--tl"></div>
+        <div class="site-frame__corner site-frame__corner--tr"></div>
+        <div class="site-frame__corner site-frame__corner--bl"></div>
+        <div class="site-frame__corner site-frame__corner--br"></div>
+    </div>
+
+    <!-- Custom cursor viewfinder (contains the massive box-shadow) -->
     <div class="cursor" id="cursor">
         <div class="cursor__corner cursor__corner--tl"></div>
         <div class="cursor__corner cursor__corner--tr"></div>
@@ -18,13 +32,8 @@
         <div class="cursor__corner cursor__corner--br"></div>
     </div>
 
-    <!-- Single video (full color, no filter on it) -->
+    <!-- Single video -->
     <video src="assets/video/COGNAC LHERAUD LA VIGNE.mp4" autoplay loop muted playsinline class="video-bg"></video>
-
-    <!-- Desaturation overlay (mix-blend-mode: saturation) -->
-    <div class="overlay overlay--desat" id="overlay-desat"></div>
-    <!-- Color tint overlay (mix-blend-mode: multiply) -->
-    <div class="overlay overlay--tint" id="overlay-tint"></div>
 
     <!-- Navbar -->
     <header class="header">
@@ -48,4 +57,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>
