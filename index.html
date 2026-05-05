@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lhéraud - 1680</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Custom cursor viewfinder -->
+    <div class="cursor" id="cursor">
+        <div class="cursor__corner cursor__corner--tl"></div>
+        <div class="cursor__corner cursor__corner--tr"></div>
+        <div class="cursor__corner cursor__corner--bl"></div>
+        <div class="cursor__corner cursor__corner--br"></div>
+    </div>
+
+    <!-- Single video (full color, no filter on it) -->
+    <video src="assets/video/COGNAC LHERAUD LA VIGNE.mp4" autoplay loop muted playsinline class="video-bg"></video>
+
+    <!-- Desaturation overlay (mix-blend-mode: saturation) -->
+    <div class="overlay overlay--desat" id="overlay-desat"></div>
+    <!-- Color tint overlay (mix-blend-mode: multiply) -->
+    <div class="overlay overlay--tint" id="overlay-tint"></div>
+
+    <!-- Navbar -->
+    <header class="header">
+        <nav class="nav">
+            <ul class="nav__list">
+                <li class="nav__item"><a href="#" class="nav__link">COGNAC</a></li>
+                <li class="nav__item"><a href="#" class="nav__link">PINEAU DES CHARENTES</a></li>
+                <li class="nav__item nav__item--logo">
+                    <a href="#"><img src="assets/image/lheraud-groupe.png" alt="Lhéraud" class="nav__logo"></a>
+                </li>
+                <li class="nav__item"><a href="#" class="nav__link">ARMAGNAC</a></li>
+                <li class="nav__item"><a href="#" class="nav__link">WHISKY</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Signature -->
+    <main class="main">
+        <img src="assets/image/LHERAUD_1680_SIGNATURE_1.png" alt="Lhéraud 1680" class="hero__signature">
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

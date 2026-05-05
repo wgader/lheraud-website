@@ -1,0 +1,185 @@
+:root {
+    --color-bg: #0b0b0b;
+    --color-text-gold: #d4c5a0;
+    --font-sans: 'Montserrat', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--color-bg);
+    color: var(--color-text-gold);
+    font-family: var(--font-sans);
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    cursor: none;
+}
+
+/* ==================== CURSOR ==================== */
+.cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    will-change: transform;
+}
+
+.cursor__corner {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-color: rgba(255, 255, 255, 0.85);
+    border-style: solid;
+}
+
+.cursor__corner--tl {
+    top: 0;
+    left: 0;
+    border-width: 1px 0 0 1px;
+}
+
+.cursor__corner--tr {
+    top: 0;
+    right: 0;
+    border-width: 1px 1px 0 0;
+}
+
+.cursor__corner--bl {
+    bottom: 0;
+    left: 0;
+    border-width: 0 0 1px 1px;
+}
+
+.cursor__corner--br {
+    bottom: 0;
+    right: 0;
+    border-width: 0 1px 1px 0;
+}
+
+
+/* ==================== VIDEO ==================== */
+.video-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 0;
+}
+
+
+/* ==================== OVERLAYS ==================== */
+/* On empile deux divs colorées avec mix-blend-mode pour créer
+   l'effet gris/sepia/violet. C'est BEAUCOUP plus rapide que 
+   backdrop-filter car ce sont juste des divs avec une couleur unie.
+   Un trou est percé via clip-path dans chacune pour révéler la couleur. */
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+}
+
+/* 1. Désaturation : un gris moyen en mode "saturation" retire les couleurs */
+.overlay--desat {
+    background-color: #808080;
+    mix-blend-mode: saturation;
+    z-index: 1;
+}
+
+/* 2. Teinte : un violet sombre en mode "multiply" ajoute la teinte Camera Raw */
+.overlay--tint {
+    background-color: #2a2035;
+    mix-blend-mode: multiply;
+    z-index: 2;
+}
+
+
+/* ==================== HEADER ==================== */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2.5rem 0;
+    z-index: 10;
+}
+
+.nav__list {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    position: relative;
+}
+
+.nav__item {
+    display: flex;
+    align-items: center;
+}
+
+.nav__item--logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav__item:nth-child(1) {
+    margin-right: 3rem;
+}
+
+.nav__item:nth-child(2) {
+    margin-right: 200px;
+}
+
+.nav__item:nth-child(4) {
+    margin-left: 200px;
+}
+
+.nav__item:nth-child(5) {
+    margin-left: 3rem;
+}
+
+.nav__link {
+    color: var(--color-text-gold);
+    text-decoration: none;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    transition: opacity 0.3s ease;
+}
+
+.nav__link:hover {
+    opacity: 0.7;
+}
+
+.nav__logo {
+    height: 65px;
+}
+
+
+/* ==================== SIGNATURE ==================== */
+.main {
+    position: fixed;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.hero__signature {
+    height: 90px;
+    opacity: 0.85;
+}
