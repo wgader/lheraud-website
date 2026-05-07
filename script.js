@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let mouseX = -300, mouseY = -300;
     let cx = -300, cy = -300;
     let cw = 280, ch = 160;
-    let hoveredLink = null;
 
     // ─── Reveal state ──────────────────────────────────────────────
     let revealState = 'idle';
@@ -24,17 +23,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const H = () => window.innerHeight;
 
     // ─── Events ────────────────────────────────────────────────────
+    let idleTime = 0;
+    const cursorPrompt = cursor.querySelector('.cursor__prompt');
+    let grainFrame = 0;
+
+    // ─── Grain Canvas Setup ──────────────────────────────────────
+    const grainCanvas = document.getElementById('grain-canvas');
+    let grainCtx = null;
+    let grainImageData = null;
+
+    if (grainCanvas) {
+        grainCtx = grainCanvas.getContext('2d');
+        // Use a small resolution for performance (will be stretched by CSS)
+        grainCanvas.width = 256;
+        grainCanvas.height = 256;
+        grainImageData = grainCtx.createImageData(256, 256);
+    }
+
+    // ─── Particles Setup ──────────────────────────────────────────
+    const canvas = document.getElementById('particles-canvas');
+    let ctx = null;
+    let particles = [];
+
+    if (canvas) {
+        ctx = canvas.getContext('2d');
+        function initParticles() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < 70; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 1.5 + 0.5,
+                    vx: (Math.random() - 0.5) * 0.2,
+                    vy: Math.random() * -0.5 - 0.1, // Float up
+                    alpha: Math.random() * 0.5 + 0.1
+                });
+            }
+        }
+        initParticles();
+        window.addEventListener('resize', initParticles);
+    }
+
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+        idleTime = 0;
+        if (cursorPrompt) cursorPrompt.style.opacity = '0';
         if (cursor.style.opacity !== '1') {
             cursor.style.opacity = '1';
         }
-    });
-
-    document.querySelectorAll('a').forEach(link => {
-        link.addEventListener('mouseenter', () => { hoveredLink = link; });
-        link.addEventListener('mouseleave', () => { hoveredLink = null; });
     });
 
     document.addEventListener('click', (e) => {
@@ -57,18 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let tx = mouseX, ty = mouseY;
         let tw = 280, th = 160;
 
-        if (hoveredLink && revealState === 'idle') {
-            const r = hoveredLink.getBoundingClientRect();
-            tx = r.left + r.width / 2;
-            ty = r.top + r.height / 2;
-            tw = r.width + 48;
-            th = r.height + 24;
-        }
+        cursor.style.borderRadius = '2px';
 
-        cx = lerp(cx, tx, 0.92);
-        cy = lerp(cy, ty, 0.92);
-        cw = lerp(cw, tw, 0.52);
-        ch = lerp(ch, th, 0.52);
+        // LERP "Ultra Smooth" (Encore plus lent et cinématographique)
+        cx = lerp(cx, tx, 0.05);
+        cy = lerp(cy, ty, 0.05);
+        cw = lerp(cw, tw, 0.05);
+        ch = lerp(ch, th, 0.05);
 
         // Hide corners during reveal
         const cornersVisible = revealState === 'idle';
@@ -91,7 +125,10 @@ document.addEventListener('DOMContentLoaded', () => {
             holeH = lerp(ch, h * 1.5, eY);
             holeY = cy; // height expands from current mouse Y
 
-            if (revealProgress >= 1) revealState = 'open';
+            if (revealProgress >= 1) {
+                revealState = 'open';
+                document.body.classList.add('is-revealed');
+            }
 
         } else if (revealState === 'open') {
             holeW = w * 1.5;
@@ -100,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             holeY = h / 2;
 
         } else if (revealState === 'closing') {
+            document.body.classList.remove('is-revealed');
             revealProgress = Math.max(0, revealProgress - OPEN_SPEED);
             const e = easeOut(revealProgress);
 
@@ -120,7 +158,72 @@ document.addEventListener('DOMContentLoaded', () => {
         cursor.style.height = holeH + 'px';
         cursor.style.transform = `translate3d(${holeX - holeW / 2}px, ${holeY - holeH / 2}px, 0)`;
 
+        // ─── Cursor Prompt Logic (Hand + Text) ──────────────────────
+        if (cursorPrompt) {
+            // Check if mouse is over any interactive element
+            const elUnder = document.elementFromPoint(mouseX, mouseY);
+            const overInteractive = elUnder && elUnder.closest('a, img, button, .nav__link, .timeline__item, .nav__logo, #grain-toggle');
+
+            if (revealState === 'idle' && !overInteractive) {
+                idleTime++;
+                if (idleTime > 90) { // ~1.5 second idle
+                    cursorPrompt.style.opacity = '1';
+                }
+            } else {
+                idleTime = 0;
+                cursorPrompt.style.opacity = '0';
+            }
+        }
+
+        // ─── Render Particles (La Part des Anges) ───────────────────
+        if (ctx) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Wrap around
+                if (p.y < 0) {
+                    p.y = canvas.height;
+                    p.x = Math.random() * canvas.width;
+                }
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(197, 164, 126, ${p.alpha})`; // gold color
+                ctx.fill();
+            });
+        }
+        // ─── Render Film Grain (Canvas noise) ────────────────────────
+        grainFrame++;
+        if (grainFrame % 4 === 0 && grainCtx && grainImageData) {
+            const data = grainImageData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                const v = (Math.random() * 255) | 0;
+                data[i]     = v; // R
+                data[i + 1] = v; // G
+                data[i + 2] = v; // B
+                data[i + 3] = 16; // Alpha (~6% visible, subtle grain)
+            }
+            grainCtx.putImageData(grainImageData, 0, 0);
+        }
+
         requestAnimationFrame(render);
+    }
+
+    // ─── TEMP: Grain Toggle ────────────────────────────────────────
+    const grainToggle = document.getElementById('grain-toggle');
+    const filmGrain = document.querySelector('.film-grain');
+    let grainEnabled = false; // OFF by default
+
+    if (grainToggle && filmGrain) {
+        grainToggle.textContent = 'GRAIN : OFF';
+        grainToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            grainEnabled = !grainEnabled;
+            filmGrain.style.opacity = grainEnabled ? '1' : '0';
+            grainToggle.textContent = grainEnabled ? 'GRAIN : ON' : 'GRAIN : OFF';
+        });
     }
 
     render();

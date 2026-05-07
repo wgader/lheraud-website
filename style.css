@@ -20,6 +20,18 @@ body {
     cursor: none;
 }
 
+a {
+    cursor: none;
+}
+
+body.is-revealed {
+    cursor: auto;
+}
+
+body.is-revealed a {
+    cursor: pointer;
+}
+
 /* ==================== CURSOR ==================== */
 .cursor {
     position: fixed;
@@ -31,6 +43,10 @@ body {
     will-change: transform, width, height;
     box-shadow: 0 0 0 100vmax rgba(20, 22, 28, 0.88);
     border-radius: 2px;
+    transition: border-radius 0.4s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .cursor__corner {
@@ -94,6 +110,25 @@ body {
     z-index: 105;
 }
 
+/* Dark gradient behind navbar for readability on bright video */
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 150%;
+    background: linear-gradient(to bottom, rgba(15, 13, 21, 0.7) 0%, rgba(15, 13, 21, 0.3) 60%, transparent 100%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    z-index: -1;
+}
+
+body.is-revealed .header::before {
+    opacity: 1;
+}
+
 /* ==================== ORNAMENTAL FRAME ==================== */
 .site-frame {
     position: fixed;
@@ -102,7 +137,7 @@ body {
     right: 15px;
     bottom: 15px;
     pointer-events: none;
-    z-index: 100;
+    z-index: 104; /* Above grain (103) */
 }
 
 .site-frame__line {
@@ -111,10 +146,33 @@ body {
     opacity: 0.4;
 }
 
-.site-frame__line--t { top: 0; left: 20px; right: 20px; height: 1px; }
-.site-frame__line--b { bottom: 0; left: 20px; right: 20px; height: 1px; }
-.site-frame__line--l { left: 0; top: 20px; bottom: 20px; width: 1px; }
-.site-frame__line--r { right: 0; top: 20px; bottom: 20px; width: 1px; }
+.site-frame__line--t {
+    top: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+}
+
+.site-frame__line--b {
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+}
+
+.site-frame__line--l {
+    left: 0;
+    top: 20px;
+    bottom: 20px;
+    width: 1px;
+}
+
+.site-frame__line--r {
+    right: 0;
+    top: 20px;
+    bottom: 20px;
+    width: 1px;
+}
 
 .site-frame__corner {
     position: absolute;
@@ -186,16 +244,48 @@ body {
 }
 
 .nav__link {
-    color: var(--color-gold);
+    position: relative;
+    display: inline-block;
     text-decoration: none;
+    padding-bottom: 8px;
+}
+
+.nav__text {
+    position: relative;
+    display: inline-block;
     font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 1.5px;
-    transition: opacity 0.3s ease;
+    color: var(--color-gold);
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
 }
 
-.nav__link:hover {
-    opacity: 0.7;
+.nav__link:hover .nav__text {
+    transform: translateY(-2px);
+    opacity: 0.85;
+}
+
+.nav__ink-wrapper {
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 25px;
+    clip-path: inset(0 100% 0 0);
+    /* perfectly hides the ink stroke */
+    transition: clip-path 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: none;
+}
+
+.nav__link:hover .nav__ink-wrapper {
+    clip-path: inset(0 0% 0 0);
+    /* perfectly reveals the ink stroke */
+}
+
+.nav__ink-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
 }
 
 .nav__logo {
@@ -216,4 +306,127 @@ body {
 .hero__signature {
     height: 90px;
     opacity: 0.85;
+}
+
+/* ==================== PARTICLES ==================== */
+.hero__particles {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 102; /* Above cursor overlay (99) and frame (100), below header (105) */
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+/* ==================== CURSOR PROMPT ==================== */
+.cursor__prompt {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.cursor__hand {
+    width: 48px;
+    height: 48px;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 2px rgba(197, 164, 126, 0.3));
+    animation: handInk 3s infinite ease-in-out;
+}
+
+.cursor__text {
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    text-align: center;
+    user-select: none;
+    font-weight: 500;
+    margin-top: -5px;
+}
+
+@keyframes handInk {
+    0%, 100% { transform: translateY(0) rotate(-5deg) scale(1); }
+    25% { transform: translateY(2px) rotate(-3deg) scale(1.02); }
+    50% { transform: translateY(5px) rotate(5deg) scale(1); }
+    75% { transform: translateY(2px) rotate(2deg) scale(0.98); }
+}
+
+/* ==================== TIMELINE ==================== */
+.vertical-timeline {
+    position: fixed;
+    right: 4rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 110;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6rem; /* Large gaps for luxury feel */
+}
+
+.timeline__line {
+    position: absolute;
+    right: 4px; /* Center with 8px marker */
+    top: 0;
+    width: 1px;
+    height: 100%;
+    background: rgba(197, 164, 126, 0.2);
+    z-index: 0;
+}
+
+.timeline__item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.timeline__label {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    color: var(--color-gold);
+    opacity: 0;
+    text-transform: uppercase;
+    transform: translateX(10px);
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.timeline__marker {
+    width: 8px;
+    height: 8px;
+    background: transparent;
+    border: 1px solid var(--color-gold);
+    transform: rotate(45deg);
+    transition: all 0.5s ease;
+}
+
+.timeline__item:hover .timeline__label {
+    opacity: 0.8;
+    transform: translateX(0);
+}
+
+.timeline__item:hover .timeline__marker {
+    background: var(--color-gold);
+    box-shadow: 0 0 10px rgba(197, 164, 126, 0.6);
+}
+
+/* ==================== FILM GRAIN ==================== */
+.film-grain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 103;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
