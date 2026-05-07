@@ -14,19 +14,28 @@ body {
     background: var(--color-bg);
     color: var(--color-gold);
     font-family: var(--font-sans);
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     overflow: hidden;
+    /* No scroll at start */
     cursor: none;
+}
+
+body.is-revealed {
+    overflow-y: auto;
+    height: auto;
+    cursor: auto;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 a {
     cursor: none;
 }
 
-body.is-revealed {
-    cursor: auto;
-}
+
 
 body.is-revealed a {
     cursor: pointer;
@@ -38,7 +47,8 @@ body.is-revealed a {
     top: 0;
     left: 0;
     pointer-events: none;
-    z-index: 99;
+    z-index: 10000;
+    /* Must be above everything */
     opacity: 0;
     will-change: transform, width, height;
     box-shadow: 0 0 0 100vmax rgba(20, 22, 28, 0.88);
@@ -107,7 +117,8 @@ body.is-revealed a {
     left: 0;
     width: 100%;
     padding: 3.5rem 0;
-    z-index: 105;
+    z-index: 10010;
+    /* Above cursor overlay (10000) */
 }
 
 /* Dark gradient behind navbar for readability on bright video */
@@ -137,7 +148,8 @@ body.is-revealed .header::before {
     right: 15px;
     bottom: 15px;
     pointer-events: none;
-    z-index: 104; /* Above grain (103) */
+    z-index: 10005;
+    /* Above grain (103) and cursor overlay (10000) */
 }
 
 .site-frame__line {
@@ -293,19 +305,196 @@ body.is-revealed .header::before {
 }
 
 
-/* ==================== SIGNATURE ==================== */
-.main {
-    position: fixed;
-    bottom: 3rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 105;
+/* ==================== HERO & SCROLL WRAPPER ==================== */
+#scroll-container {
+    position: relative;
+    z-index: 10001; /* Above cursor overlay (10000) so signature is visible */
+}
+
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 3rem;
     pointer-events: none;
+    z-index: 10005;
+    /* Signature above overlay */
+    position: relative;
 }
 
 .hero__signature {
     height: 90px;
     opacity: 0.85;
+    transition: opacity 0.8s ease;
+}
+
+/* ==================== COLLECTIONS SECTION ==================== */
+.collections {
+    position: relative;
+    padding: 15rem 4rem 10rem;
+    background: linear-gradient(to bottom, transparent, var(--color-bg) 15%, var(--color-bg));
+    min-height: 120vh;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.5s ease;
+}
+
+body.is-revealed .collections {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.collections__header {
+    text-align: center;
+    margin-bottom: 8rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.collections.is-visible .collections__header {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.collections__title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+}
+
+.collections__line {
+    width: 60px;
+    height: 1px;
+    background: var(--color-gold);
+    margin: 0 auto;
+    opacity: 0.5;
+}
+
+.collections__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 3rem;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.collection-card {
+    position: relative;
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.collections.is-visible .collection-card {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.collections.is-visible .collection-card:nth-child(2) {
+    transition-delay: 0.2s;
+}
+
+.collections.is-visible .collection-card:nth-child(3) {
+    transition-delay: 0.4s;
+}
+
+.collections.is-visible .collection-card:nth-child(4) {
+    transition-delay: 0.6s;
+}
+
+.collection-card__image-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 0.8;
+    margin-bottom: 2rem;
+    overflow: visible;
+    /* Allow drop shadow glow to exceed boundaries */
+    background: transparent;
+    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.collection-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: screen;
+    filter: brightness(1) contrast(1);
+    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.collection-card__content {
+    text-align: center;
+    transition: transform 0.6s ease;
+}
+
+.collection-card:hover .collection-card__image {
+    transform: scale(1.08) translateY(-10px);
+    /* Removed drop-shadow as requested */
+}
+
+.collection-card:hover .collection-card__content {
+    transform: translateY(-5px);
+}
+
+.collection-card__category {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(197, 164, 126, 0.6);
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.collection-card__name {
+    font-size: 1.3rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.collection-card__link {
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--color-gold);
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 12px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.collection-card__link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-gold);
+    transform: scaleX(0.2);
+    transform-origin: left;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.collection-card:hover .collection-card__link::after {
+    transform: scaleX(1);
+}
+
+.collection-card:hover .collection-card__image {
+    transform: scale(1.1);
+}
+
+.collection-card:hover .collection-card__link::after {
+    transform: scaleX(1);
 }
 
 /* ==================== PARTICLES ==================== */
@@ -315,9 +504,14 @@ body.is-revealed .header::before {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 102; /* Above cursor overlay (99) and frame (100), below header (105) */
+    z-index: 102;
     pointer-events: none;
     opacity: 0.7;
+    transition: opacity 0.8s ease;
+}
+
+.hero__particles.is-hidden {
+    opacity: 0;
 }
 
 /* ==================== CURSOR PROMPT ==================== */
@@ -351,10 +545,23 @@ body.is-revealed .header::before {
 }
 
 @keyframes handInk {
-    0%, 100% { transform: translateY(0) rotate(-5deg) scale(1); }
-    25% { transform: translateY(2px) rotate(-3deg) scale(1.02); }
-    50% { transform: translateY(5px) rotate(5deg) scale(1); }
-    75% { transform: translateY(2px) rotate(2deg) scale(0.98); }
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(-5deg) scale(1);
+    }
+
+    25% {
+        transform: translateY(2px) rotate(-3deg) scale(1.02);
+    }
+
+    50% {
+        transform: translateY(5px) rotate(5deg) scale(1);
+    }
+
+    75% {
+        transform: translateY(2px) rotate(2deg) scale(0.98);
+    }
 }
 
 /* ==================== TIMELINE ==================== */
@@ -363,16 +570,25 @@ body.is-revealed .header::before {
     right: 4rem;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 110;
+    z-index: 10005;
+    /* Above overlay */
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 6rem; /* Large gaps for luxury feel */
+    gap: 6rem;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.vertical-timeline.is-hidden {
+    opacity: 0;
+    transform: translateY(-40%) translateX(20px);
+    pointer-events: none;
 }
 
 .timeline__line {
     position: absolute;
-    right: 4px; /* Center with 8px marker */
+    right: 4px;
+    /* Center with 8px marker */
     top: 0;
     width: 1px;
     height: 100%;
@@ -429,4 +645,8 @@ body.is-revealed .header::before {
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.5s ease;
+}
+
+.film-grain.is-hidden {
+    opacity: 0 !important;
 }

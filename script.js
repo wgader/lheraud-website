@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mouseX = e.clientX;
         mouseY = e.clientY;
         idleTime = 0;
-        if (cursorPrompt) cursorPrompt.style.opacity = '0';
+        // if (cursorPrompt) cursorPrompt.style.opacity = '0';
         if (cursor.style.opacity !== '1') {
             cursor.style.opacity = '1';
         }
@@ -78,6 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', (e) => {
         if (e.target.closest('a')) return;
+        
+        // EMPÊCHER le retour à l'intro si le site est déjà révélé
+        if (document.body.classList.contains('is-revealed')) return;
 
         if (revealState === 'idle' || revealState === 'closing') {
             revealAnchorX = mouseX;
@@ -128,6 +131,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (revealProgress >= 1) {
                 revealState = 'open';
                 document.body.classList.add('is-revealed');
+                
+                // AUTOMATICALLY TURN OFF GRAIN ON REVEAL
+                if (filmGrain) {
+                    grainEnabled = false;
+                    filmGrain.style.opacity = '0';
+                    if (grainToggle) grainToggle.textContent = 'GRAIN : OFF';
+                }
             }
 
         } else if (revealState === 'open') {
@@ -157,6 +167,12 @@ document.addEventListener('DOMContentLoaded', () => {
         cursor.style.width = holeW + 'px';
         cursor.style.height = holeH + 'px';
         cursor.style.transform = `translate3d(${holeX - holeW / 2}px, ${holeY - holeH / 2}px, 0)`;
+
+        // ─── Scroll Container Interaction ──────────────────────────
+        const scrollContainer = document.getElementById('scroll-container');
+        if (scrollContainer) {
+            scrollContainer.style.pointerEvents = (revealState === 'open') ? 'auto' : 'none';
+        }
 
         // ─── Cursor Prompt Logic (Hand + Text) ──────────────────────
         if (cursorPrompt) {
@@ -200,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = grainImageData.data;
             for (let i = 0; i < data.length; i += 4) {
                 const v = (Math.random() * 255) | 0;
-                data[i]     = v; // R
+                data[i] = v; // R
                 data[i + 1] = v; // G
                 data[i + 2] = v; // B
                 data[i + 3] = 16; // Alpha (~6% visible, subtle grain)
@@ -214,10 +230,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // ─── TEMP: Grain Toggle ────────────────────────────────────────
     const grainToggle = document.getElementById('grain-toggle');
     const filmGrain = document.querySelector('.film-grain');
-    let grainEnabled = false; // OFF by default
+    let grainEnabled = true; // ON by default
 
     if (grainToggle && filmGrain) {
-        grainToggle.textContent = 'GRAIN : OFF';
+        grainToggle.textContent = 'GRAIN : ON';
+        filmGrain.style.opacity = '1'; // Ensure it's visible at start
+        
         grainToggle.addEventListener('click', (e) => {
             e.stopPropagation();
             grainEnabled = !grainEnabled;
@@ -225,6 +243,76 @@ document.addEventListener('DOMContentLoaded', () => {
             grainToggle.textContent = grainEnabled ? 'GRAIN : ON' : 'GRAIN : OFF';
         });
     }
+
+    // ─── Collections Intersection Observer ────────────────────────
+    const collectionsSection = document.querySelector('.collections');
+    if (collectionsSection) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    collectionsSection.classList.add('is-visible');
+                }
+            });
+        }, { threshold: 0.15 });
+        observer.observe(collectionsSection);
+    }
+
+    // ─── Collection Cards Mouse Parallax ──────────────────────────
+    const cards = document.querySelectorAll('.collection-card');
+    cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+            const img = card.querySelector('.collection-card__image');
+            if (img && typeof gsap !== 'undefined') {
+                gsap.to(img, {
+                    x: x * 20,
+                    y: y * 20,
+                    duration: 0.6,
+                    ease: "power2.out"
+                });
+            }
+        });
+
+        card.addEventListener('mouseleave', () => {
+            const img = card.querySelector('.collection-card__image');
+            if (img && typeof gsap !== 'undefined') {
+                gsap.to(img, { x: 0, y: 0, duration: 1, ease: "power2.out" });
+            }
+        });
+    });
+
+    // ─── Scroll Effects ───────────────────────────────────────────
+    const heroSignature = document.querySelector('.hero__signature');
+    const particlesEl = document.getElementById('particles-canvas');
+    const timelineEl = document.querySelector('.vertical-timeline');
+    const grainEl = document.getElementById('grain-canvas');
+    const grainBtn = document.getElementById('grain-toggle');
+
+    window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY;
+        const hideThreshold = 300; // Point where hero elements start fading
+
+        // Fade hero signature
+        if (heroSignature) {
+            const opacity = Math.max(0, 0.85 - (scrollY / 400));
+            heroSignature.style.opacity = opacity;
+            heroSignature.style.transform = `translateY(${scrollY * 0.2}px)`;
+        }
+
+        // Hide/Show hero specific elements
+        const shouldHide = scrollY > hideThreshold;
+
+        if (particlesEl) particlesEl.classList.toggle('is-hidden', shouldHide);
+        if (timelineEl) timelineEl.classList.toggle('is-hidden', shouldHide);
+        if (grainEl) grainEl.classList.toggle('is-hidden', shouldHide);
+        if (grainBtn) {
+            grainBtn.style.opacity = shouldHide ? '0' : '1';
+            grainBtn.style.pointerEvents = shouldHide ? 'none' : 'auto';
+        }
+    });
 
     render();
 });
