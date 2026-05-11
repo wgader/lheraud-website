@@ -139,7 +139,7 @@
         cursor: pointer;
         backdrop-filter: blur(4px);
         transition: all 0.3s ease, opacity 0.5s ease;
-    ">GRAIN : OFF</button>
+    ">GRAIN : ON</button>
 
     <!-- Vertical Timeline -->
     <aside class="vertical-timeline">
@@ -226,9 +226,77 @@
                 </div>
             </div>
         </section>
+
+
+        <!-- ==================== HERITAGE GALLERY (STACK REVEAL) ==================== -->
+        <section id="heritage-gallery" class="heritage-gallery">
+            <div class="gallery__scroll-track">
+                <!-- Cinematic Black Curtain Reveal -->
+                <div class="gallery__curtain">
+                    <div class="curtain__panel curtain__panel--top"></div>
+                    <div class="curtain__panel curtain__panel--bottom"></div>
+                </div>
+
+                <div class="gallery__pin-container">
+                <div class="gallery__stack">
+                    <!-- Slide 1: Cognac -->
+                    <div class="gallery__slide" data-index="0">
+                        <div class="gallery__slide-content">
+                            <img src="assets/image/collections/LHERAUD_COGNAC_BEIGE.png" alt="Logo" class="gallery__slide-logo">
+                            <div class="gallery__slide-image-wrap">
+                                <img src="assets/image/collections/COGNAC-LHERAUD.png" alt="Product" class="gallery__slide-img">
+                            </div>
+                            <div class="gallery__slide-footer">
+                                <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2: Pineau -->
+                    <div class="gallery__slide" data-index="1">
+                        <div class="gallery__slide-content">
+                            <img src="assets/image/collections/PINEAU_FRANCOIS_1ER_beige.png" alt="Logo" class="gallery__slide-logo">
+                            <div class="gallery__slide-image-wrap">
+                                <img src="assets/image/collections/PineauF1er-lheraud.png" alt="Product" class="gallery__slide-img">
+                            </div>
+                            <div class="gallery__slide-footer">
+                                <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3: Armagnac -->
+                    <div class="gallery__slide" data-index="2">
+                        <div class="gallery__slide-content">
+                            <img src="assets/image/collections/BARON_GASTON_LEGRAND_beige.png" alt="Logo" class="gallery__slide-logo">
+                            <div class="gallery__slide-image-wrap">
+                                <img src="assets/image/collections/armagnac-lheraud.png" alt="Product" class="gallery__slide-img">
+                            </div>
+                            <div class="gallery__slide-footer">
+                                <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4: Whisky -->
+                    <div class="gallery__slide" data-index="3">
+                        <div class="gallery__slide-content">
+                            <img src="assets/image/collections/LASDOUX_WHISKY_4.png" alt="Logo" class="gallery__slide-logo">
+                            <div class="gallery__slide-image-wrap">
+                                <img src="assets/image/collections/Lasdoux-Whisky.png" alt="Product" class="gallery__slide-img">
+                            </div>
+                            <div class="gallery__slide-footer">
+                                <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <script src="script.js"></script>
 </body>
 

@@ -24,13 +24,29 @@
         <div class="site-frame__corner site-frame__corner--br"></div>
     </div>
 
-    <!-- Custom cursor viewfinder (contains the massive box-shadow) -->
+    <!-- Custom cursor viewfinder -->
     <div class="cursor" id="cursor">
+        <div class="cursor__prompt">
+            <!-- Vintage Manicule (Pointing Hand) -->
+            <svg class="cursor__hand" viewBox="0 0 100 100" fill="none" stroke="var(--color-gold)" stroke-width="0.8"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path
+                    d="M75,50 C75,45 70,42 65,42 C60,42 58,45 58,45 M58,45 C58,40 53,37 48,37 C43,37 41,40 41,40 M41,40 C41,35 36,32 31,32 C26,32 24,35 24,35 M24,35 L24,65 C24,75 32,83 42,83 L60,83 C70,83 75,75 75,65 L75,50 M24,45 L15,45 C10,45 8,42 8,38 L8,25 C8,21 11,18 15,18 L25,18 C30,18 35,22 40,30 L45,40" />
+                <path d="M24,35 C24,35 20,32 18,35 C16,38 18,45 24,45" />
+            </svg>
+            <span class="cursor__text">Maintenez pour découvrir</span>
+        </div>
         <div class="cursor__corner cursor__corner--tl"></div>
         <div class="cursor__corner cursor__corner--tr"></div>
         <div class="cursor__corner cursor__corner--bl"></div>
         <div class="cursor__corner cursor__corner--br"></div>
     </div>
+
+    <!-- Background Particles -->
+    <canvas id="particles-canvas" class="hero__particles"></canvas>
+
+    <!-- Film Grain Canvas -->
+    <canvas id="grain-canvas" class="film-grain"></canvas>
 
     <!-- Single video -->
     <video src="assets/video/LHERAUD_HEADER SITE_VFFF.mp4" autoplay loop muted playsinline class="video-bg"></video>
@@ -41,47 +57,176 @@
             <ul class="nav__list">
                 <li class="nav__item">
                     <a href="#" class="nav__link">
-                        <span class="nav__link-text">COGNAC</span>
-                        <svg class="nav__underline" viewBox="0 0 100 20" preserveAspectRatio="none">
-                            <path d="M 0,15 C 30,22 70,10 100,15" />
-                        </svg>
+                        <span class="nav__text">COGNAC</span>
+                        <div class="nav__ink-wrapper">
+                            <svg class="nav__ink-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                <path d="M 0,10 C 30,15 70,12 100,8" stroke="var(--color-gold)" stroke-width="1.5"
+                                    fill="none" stroke-linecap="round" />
+                                <path d="M 5,12 C 35,17 75,14 95,9" stroke="var(--color-gold)" stroke-width="0.75"
+                                    fill="none" stroke-linecap="round" opacity="0.6" />
+                                <path d="M 15,14 C 40,18 60,15 85,10" stroke="var(--color-gold)" stroke-width="0.5"
+                                    fill="none" stroke-linecap="round" opacity="0.4" />
+                            </svg>
+                        </div>
                     </a>
                 </li>
                 <li class="nav__item">
                     <a href="#" class="nav__link">
-                        <span class="nav__link-text">PINEAU DES CHARENTES</span>
-                        <svg class="nav__underline" viewBox="0 0 100 20" preserveAspectRatio="none">
-                            <path d="M 0,15 C 30,22 70,10 100,15" />
-                        </svg>
+                        <span class="nav__text">PINEAU DES CHARENTES</span>
+                        <div class="nav__ink-wrapper">
+                            <svg class="nav__ink-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                <path d="M 0,10 C 30,15 70,12 100,8" stroke="var(--color-gold)" stroke-width="1.5"
+                                    fill="none" stroke-linecap="round" />
+                                <path d="M 5,12 C 35,17 75,14 95,9" stroke="var(--color-gold)" stroke-width="0.75"
+                                    fill="none" stroke-linecap="round" opacity="0.6" />
+                                <path d="M 15,14 C 40,18 60,15 85,10" stroke="var(--color-gold)" stroke-width="0.5"
+                                    fill="none" stroke-linecap="round" opacity="0.4" />
+                            </svg>
+                        </div>
                     </a>
                 </li>
                 <li class="nav__item nav__item--logo">
                     <a href="#"><img src="assets/image/lheraud-groupe.png" alt="Lhéraud" class="nav__logo"></a>
                 </li>
                 <li class="nav__item">
-                    <a href="#" class="nav__link">
-                        <span class="nav__link-text">ARMAGNAC</span>
-                        <svg class="nav__underline" viewBox="0 0 100 20" preserveAspectRatio="none">
-                            <path d="M 0,15 C 30,22 70,10 100,15" />
-                        </svg>
+                    <a href="#armagnac" class="nav__link">
+                        <span class="nav__text">ARMAGNAC</span>
+                        <div class="nav__ink-wrapper">
+                            <svg class="nav__ink-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                <path d="M 0,10 C 30,15 70,12 100,8" stroke="var(--color-gold)" stroke-width="1.5"
+                                    fill="none" stroke-linecap="round" />
+                                <path d="M 5,12 C 35,17 75,14 95,9" stroke="var(--color-gold)" stroke-width="0.75"
+                                    fill="none" stroke-linecap="round" opacity="0.6" />
+                                <path d="M 15,14 C 40,18 60,15 85,10" stroke="var(--color-gold)" stroke-width="0.5"
+                                    fill="none" stroke-linecap="round" opacity="0.4" />
+                            </svg>
+                        </div>
                     </a>
                 </li>
                 <li class="nav__item">
                     <a href="#" class="nav__link">
-                        <span class="nav__link-text">WHISKY</span>
-                        <svg class="nav__underline" viewBox="0 0 100 20" preserveAspectRatio="none">
-                            <path d="M 0,15 C 30,22 70,10 100,15" />
-                        </svg>
+                        <span class="nav__text">WHISKY</span>
+                        <div class="nav__ink-wrapper">
+                            <svg class="nav__ink-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
+                                <path d="M 0,10 C 30,15 70,12 100,8" stroke="var(--color-gold)" stroke-width="1.5"
+                                    fill="none" stroke-linecap="round" />
+                                <path d="M 5,12 C 35,17 75,14 95,9" stroke="var(--color-gold)" stroke-width="0.75"
+                                    fill="none" stroke-linecap="round" opacity="0.6" />
+                                <path d="M 15,14 C 40,18 60,15 85,10" stroke="var(--color-gold)" stroke-width="0.5"
+                                    fill="none" stroke-linecap="round" opacity="0.4" />
+                            </svg>
+                        </div>
                     </a>
                 </li>
             </ul>
         </nav>
     </header>
 
-    <!-- Signature -->
-    <div class="main">
-        <img src="assets/image/LHERAUD_1680_SIGNATURE_1.png" alt="Lhéraud 1680" class="hero__signature">
-    </div>
+    <!-- TEMP: Film Grain Toggle -->
+    <button id="grain-toggle" style="
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        z-index: 10015;
+        background: rgba(197,164,126,0.15);
+        border: 1px solid var(--color-gold);
+        color: var(--color-gold);
+        padding: 8px 16px;
+        font-family: var(--font-sans);
+        font-size: 0.65rem;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        cursor: pointer;
+        backdrop-filter: blur(4px);
+        transition: all 0.3s ease, opacity 0.5s ease;
+    ">GRAIN : OFF</button>
+
+    <!-- Vertical Timeline -->
+    <aside class="vertical-timeline">
+        <div class="timeline__line"></div>
+        <div class="timeline__item">
+            <span class="timeline__label">LE DOMAINE</span>
+            <div class="timeline__marker"></div>
+        </div>
+        <div class="timeline__item">
+            <span class="timeline__label">LE CHAI</span>
+            <div class="timeline__marker"></div>
+        </div>
+        <div class="timeline__item">
+            <span class="timeline__label">L'HÉRITAGE</span>
+            <div class="timeline__marker"></div>
+        </div>
+    </aside>
+    <main id="scroll-container">
+        <!-- Hero Section -->
+        <section id="hero" class="hero">
+            <div class="hero__content">
+                <img src="assets/image/LHERAUD_1680_SIGNATURE_1.png" alt="Lhéraud 1680" class="hero__signature">
+            </div>
+        </section>
+
+        <!-- Collections Section -->
+        <section id="collections" class="collections">
+            <div class="collections__header">
+                <h2 class="collections__title">Les Collections Lhéraud</h2>
+                <div class="collections__line"></div>
+            </div>
+
+            <div class="collections__grid">
+                <!-- Cognac -->
+                <div class="collection-card" data-parallax="0.1">
+                    <div class="collection-card__image-wrap">
+                        <img src="assets/image/collections/COGNAC-LHERAUD.png" alt="Lhéraud Cognac"
+                            class="collection-card__image">
+                    </div>
+                    <div class="collection-card__content">
+                        <span class="collection-card__category">Cognac</span>
+                        <h3 class="collection-card__name">Lhéraud <br>Cognac</h3>
+                        <a href="#" class="collection-card__link">Découvrir la collection</a>
+                    </div>
+                </div>
+
+                <!-- Pineau -->
+                <div class="collection-card" data-parallax="0.15">
+                    <div class="collection-card__image-wrap">
+                        <img src="assets/image/collections/PineauF1er-lheraud.png" alt="Pineau François 1er"
+                            class="collection-card__image">
+                    </div>
+                    <div class="collection-card__content">
+                        <span class="collection-card__category">Pineau des Charentes</span>
+                        <h3 class="collection-card__name">Pineau <br>François 1<sup>er</sup></h3>
+                        <a href="#" class="collection-card__link">Découvrir la collection</a>
+                    </div>
+                </div>
+
+                <!-- Armagnac -->
+                <div class="collection-card" data-parallax="0.05">
+                    <div class="collection-card__image-wrap">
+                        <img src="assets/image/collections/armagnac-lheraud.png" alt="Armagnac Gaston Legrand"
+                            class="collection-card__image">
+                    </div>
+                    <div class="collection-card__content">
+                        <span class="collection-card__category">Armagnac</span>
+                        <h3 class="collection-card__name">Baron <br>Gaston Legrand</h3>
+                        <a href="#" class="collection-card__link">Découvrir la collection</a>
+                    </div>
+                </div>
+
+                <!-- Whisky -->
+                <div class="collection-card" data-parallax="0.12">
+                    <div class="collection-card__image-wrap">
+                        <img src="assets/image/collections/Lasdoux-Whisky.png" alt="Lasdoux Whisky"
+                            class="collection-card__image">
+                    </div>
+                    <div class="collection-card__content">
+                        <span class="collection-card__category">Whisky</span>
+                        <h3 class="collection-card__name">Lasdoux <br>Whisky</h3>
+                        <a href="#" class="collection-card__link">Découvrir la collection</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="script.js"></script>

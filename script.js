@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', (e) => {
         if (e.target.closest('a')) return;
-        
+
         // EMPÊCHER le retour à l'intro si le site est déjà révélé
         if (document.body.classList.contains('is-revealed')) return;
 
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (revealProgress >= 1) {
                 revealState = 'open';
                 document.body.classList.add('is-revealed');
-                
+
                 // AUTOMATICALLY TURN OFF GRAIN ON REVEAL
                 if (filmGrain) {
                     grainEnabled = false;
@@ -212,14 +212,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // ─── Render Film Grain (Canvas noise) ────────────────────────
         grainFrame++;
-        if (grainFrame % 4 === 0 && grainCtx && grainImageData) {
+        if (grainFrame % 2 === 0 && grainCtx && grainImageData && grainEnabled) {
             const data = grainImageData.data;
             for (let i = 0; i < data.length; i += 4) {
                 const v = (Math.random() * 255) | 0;
-                data[i] = v; // R
-                data[i + 1] = v; // G
-                data[i + 2] = v; // B
-                data[i + 3] = 16; // Alpha (~6% visible, subtle grain)
+                data[i] = v; data[i+1] = v; data[i+2] = v;
+                data[i + 3] = 30; // Clearly visible noise
             }
             grainCtx.putImageData(grainImageData, 0, 0);
         }
@@ -235,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (grainToggle && filmGrain) {
         grainToggle.textContent = 'GRAIN : ON';
         filmGrain.style.opacity = '1'; // Ensure it's visible at start
-        
+
         grainToggle.addEventListener('click', (e) => {
             e.stopPropagation();
             grainEnabled = !grainEnabled;
@@ -297,9 +295,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Fade hero signature
         if (heroSignature) {
-            const opacity = Math.max(0, 0.85 - (scrollY / 400));
+            // Signature is 100% visible at top, fades out by scrollY = 400
+            const opacity = Math.max(0, 1 - (scrollY / 400));
             heroSignature.style.opacity = opacity;
-            heroSignature.style.transform = `translateY(${scrollY * 0.2}px)`;
+            heroSignature.style.transform = `translateY(${scrollY * 0.1}px)`;
         }
 
         // Hide/Show hero specific elements
@@ -313,6 +312,66 @@ document.addEventListener('DOMContentLoaded', () => {
             grainBtn.style.pointerEvents = shouldHide ? 'none' : 'auto';
         }
     });
+
+    // ─── GSAP ScrollTrigger: Heritage Gallery (Vertical Reveal) ────
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+
+        const heritageSection = document.querySelector('.heritage-gallery');
+        const slides = gsap.utils.toArray('.gallery__slide');
+        const curtainTop = document.querySelector('.curtain__panel--top');
+        const curtainBottom = document.querySelector('.curtain__panel--bottom');
+
+        if (heritageSection && slides.length > 0) {
+            // Initial state: hide all slides
+            gsap.set(slides, { autoAlpha: 0 });
+            gsap.set(slides[0], { autoAlpha: 1 });
+
+            const tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: heritageSection,
+                    pin: true,
+                    scrub: 1.5, // Smoother scrub with more inertia
+                    snap: {
+                        snapTo: 1 / (slides.length + 3), // Better snap calculation for the curtain stages
+                        duration: 0.8,
+                        delay: 0.1,
+                        ease: "power2.inOut"
+                    },
+                    start: "top top",
+                    end: "+=500%", // Extra space for smoother transitions
+                }
+            });
+
+            // 1. Initial Reveal
+            tl.to(curtainTop, { yPercent: -100, duration: 1.2, ease: "power2.inOut" })
+              .to(curtainBottom, { yPercent: 100, duration: 1.2, ease: "power2.inOut" }, "<");
+
+            // 2. Sequential Reveals
+            slides.forEach((slide, i) => {
+                if (i === 0) return;
+
+                // Close curtain (Mussel shell closing) - Slower and smoother
+                tl.to(curtainTop, { yPercent: 0, duration: 1.5, ease: "power2.inOut" })
+                  .to(curtainBottom, { yPercent: 0, duration: 1.5, ease: "power2.inOut" }, "<")
+                
+                // Switch slide
+                .set(slides[i-1], { autoAlpha: 0 })
+                .set(slides[i], { autoAlpha: 1 })
+                
+                // Open curtain (Mussel shell opening) - Slower and smoother
+                .to(curtainTop, { yPercent: -100, duration: 1.5, ease: "power2.inOut" })
+                .to(curtainBottom, { yPercent: 100, duration: 1.5, ease: "power2.inOut" }, "<");
+
+                // Last slide cleanup
+                if (i === slides.length - 1) {
+                    tl.to([curtainTop, curtainBottom], { borderColor: "transparent", duration: 0.8 }, "-=0.5");
+                }
+            });
+
+            tl.to({}, { duration: 1 });
+        }
+    }
 
     render();
 });

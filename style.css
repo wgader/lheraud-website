@@ -116,9 +116,9 @@ body.is-revealed a {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 3.5rem 0;
+    padding: 2rem 0;
+    /* Reduced from 3.5rem */
     z-index: 10010;
-    /* Above cursor overlay (10000) */
 }
 
 /* Dark gradient behind navbar for readability on bright video */
@@ -265,7 +265,8 @@ body.is-revealed .header::before {
 .nav__text {
     position: relative;
     display: inline-block;
-    font-size: 0.8rem;
+    font-size: 0.65rem;
+    /* Reduced from 0.8rem */
     font-weight: 600;
     letter-spacing: 1.5px;
     color: var(--color-gold);
@@ -301,14 +302,16 @@ body.is-revealed .header::before {
 }
 
 .nav__logo {
-    height: 65px;
+    height: 50px;
+    /* Reduced from 65px */
 }
 
 
 /* ==================== HERO & SCROLL WRAPPER ==================== */
 #scroll-container {
     position: relative;
-    z-index: 10001; /* Above cursor overlay (10000) so signature is visible */
+    z-index: 10001;
+    /* Above cursor overlay (10000) so signature is visible */
 }
 
 .hero {
@@ -324,7 +327,8 @@ body.is-revealed .header::before {
 }
 
 .hero__signature {
-    height: 90px;
+    height: 60px;
+    /* Reduced from 70px */
     opacity: 0.85;
     transition: opacity 0.8s ease;
 }
@@ -359,7 +363,8 @@ body.is-revealed .collections {
 }
 
 .collections__title {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
+    /* Reduced from 2.5rem */
     font-weight: 600;
     letter-spacing: 6px;
     text-transform: uppercase;
@@ -378,7 +383,8 @@ body.is-revealed .collections {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 3rem;
-    max-width: 1600px;
+    max-width: 1300px;
+    /* Tightened from 1600px */
     margin: 0 auto;
 }
 
@@ -438,21 +444,41 @@ body.is-revealed .collections {
     /* Removed drop-shadow as requested */
 }
 
+.hero {
+    height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 3rem;
+    pointer-events: none;
+    z-index: 10005;
+    position: relative;
+}
+
+.hero__signature {
+    height: 90px;
+    opacity: 0.9;
+    filter: brightness(1.1);
+    transition: opacity 0.8s ease;
+}
+
 .collection-card:hover .collection-card__content {
     transform: translateY(-5px);
 }
 
 .collection-card__category {
-    font-size: 0.65rem;
+    font-size: 0.55rem;
+    /* Reduced from 0.65rem */
     letter-spacing: 3px;
     text-transform: uppercase;
     color: rgba(197, 164, 126, 0.6);
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     display: block;
 }
 
 .collection-card__name {
-    font-size: 1.3rem;
+    font-size: 1rem;
+    /* Reduced from 1.1rem */
     font-weight: 600;
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -461,13 +487,14 @@ body.is-revealed .collections {
 }
 
 .collection-card__link {
-    font-size: 0.65rem;
-    letter-spacing: 3px;
+    font-size: 0.6rem;
+    /* Smaller */
+    letter-spacing: 2px;
     text-transform: uppercase;
     color: var(--color-gold);
     text-decoration: none;
     position: relative;
-    padding-bottom: 12px;
+    padding-bottom: 10px;
     transition: all 0.3s ease;
     display: inline-block;
 }
@@ -508,6 +535,20 @@ body.is-revealed .collections {
     pointer-events: none;
     opacity: 0.7;
     transition: opacity 0.8s ease;
+}
+
+/* ==================== FILM GRAIN ==================== */
+.film-grain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10020;
+    /* High z-index to be visible over overlay */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
 }
 
 .hero__particles.is-hidden {
@@ -634,19 +675,145 @@ body.is-revealed .collections {
     box-shadow: 0 0 10px rgba(197, 164, 126, 0.6);
 }
 
-/* ==================== FILM GRAIN ==================== */
-.film-grain {
+/* ==================== HERITAGE GALLERY (STACK REVEAL) ==================== */
+.heritage-gallery {
+    position: relative;
+    width: 100%;
+    background: var(--color-bg);
+}
+
+.gallery__scroll-track {
+    height: 500vh;
+    /* Space for the 4-slide reveal journey */
+    position: relative;
+}
+
+.gallery__pin-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.gallery__stack {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.gallery__slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    will-change: opacity, visibility;
+    padding: 0 5vw;
+}
+
+.gallery__slide-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    max-width: 1000px;
+}
+
+/* Scaled down Logo */
+.gallery__slide-logo {
+    height: 60px;
+    /* Reduced from 80px */
+    object-fit: contain;
+    margin-bottom: 2.5rem;
+    filter: brightness(1.2);
+    opacity: 0.85;
+}
+
+/* Scaled down Bottle with Parallax */
+.gallery__slide-image-wrap {
+    height: 42vh;
+    /* Reduced from 50vh */
+    margin-bottom: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+}
+
+.gallery__slide-img {
+    height: 100%;
+    object-fit: contain;
+    mix-blend-mode: screen;
+    will-change: transform;
+    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.5));
+}
+
+/* Action Button (Small & Refined) */
+.gallery__slide-footer {
+    margin-top: 1rem;
+}
+
+.gallery__btn {
+    display: inline-block;
+    padding: 0.9rem 3.2rem;
+    /* Reduced padding */
+    background: transparent;
+    border: 1px solid rgba(212, 197, 160, 0.4);
+    color: var(--color-gold);
+    text-decoration: none;
+    font-size: 0.6rem;
+    /* Smaller font */
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.gallery__btn:hover {
+    background: var(--color-gold);
+    color: var(--color-bg);
+    border-color: var(--color-gold);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Cinematic Black Curtain Reveal */
+.gallery__curtain {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 103;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
     pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.5s ease;
+    display: flex;
+    flex-direction: column;
 }
 
-.film-grain.is-hidden {
-    opacity: 0 !important;
+.curtain__panel {
+    width: 100%;
+    height: 50%;
+    background: var(--color-bg);
+    /* Use site BG for seamless reveal */
+    will-change: transform;
+}
+
+.curtain__panel--top {
+    border-bottom: 1px solid rgba(212, 197, 160, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.curtain__panel--bottom {
+    border-top: 1px solid rgba(212, 197, 160, 0.2);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
 }
