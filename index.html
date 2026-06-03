@@ -28,18 +28,7 @@
     </div>
 
     <!-- Custom cursor viewfinder -->
-    <div class="cursor" id="cursor">
-        <div class="cursor__prompt">
-            <!-- Vintage Manicule (Pointing Hand) -->
-            <svg class="cursor__hand" viewBox="0 0 100 100" fill="none" stroke="var(--color-gold)" stroke-width="0.8"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path
-                    d="M75,50 C75,45 70,42 65,42 C60,42 58,45 58,45 M58,45 C58,40 53,37 48,37 C43,37 41,40 41,40 M41,40 C41,35 36,32 31,32 C26,32 24,35 24,35 M24,35 L24,65 C24,75 32,83 42,83 L60,83 C70,83 75,75 75,65 L75,50 M24,45 L15,45 C10,45 8,42 8,38 L8,25 C8,21 11,18 15,18 L25,18 C30,18 35,22 40,30 L45,40" />
-                <path d="M24,35 C24,35 20,32 18,35 C16,38 18,45 24,45" />
-            </svg>
-            <span class="cursor__text">Maintenez pour découvrir</span>
-        </div>
-    </div>
+    <div class="cursor" id="cursor"></div>
 
     <!-- Background Particles -->
     <canvas id="particles-canvas" class="hero__particles"></canvas>
@@ -78,24 +67,6 @@
         </div>
     </header>
 
-    <!-- TEMP: Film Grain Toggle -->
-    <button id="grain-toggle" style="
-        position: fixed;
-        bottom: 5rem;
-        left: 4rem;
-        z-index: 10015;
-        background: rgba(197, 164, 126, 0.057);
-        border: 1px solid var(--color-gold);
-        color: var(--color-gold);
-        padding: 8px 16px;
-        font-family: var(--font-sans);
-        font-size: 0.65rem;
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        cursor: pointer;
-        backdrop-filter: blur(4px);
-        transition: all 0.3s ease, opacity 0.5s ease;
-    ">GRAIN : ON</button>
 
     <!-- Vertical Timeline -->
     <aside class="vertical-timeline">
@@ -350,21 +321,34 @@
         <!-- Compass Widget -->
         <div class="map-overlay__compass">
             <svg class="map-overlay__compass-svg" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="45" stroke="var(--color-creme)" stroke-width="0.5" stroke-opacity="0.3"
-                    fill="none" />
-                <circle cx="50" cy="50" r="3" fill="var(--color-creme)" />
-                <path d="M 50,15 L 53,45 L 50,48 L 47,45 Z" fill="var(--color-white)" />
-                <path d="M 50,85 L 53,55 L 50,52 L 47,55 Z" fill="var(--color-creme)" opacity="0.6" />
-                <path d="M 15,50 L 45,53 L 48,50 L 45,47 Z" fill="var(--color-creme)" opacity="0.6" />
-                <path d="M 85,50 L 55,53 L 52,50 L 55,47 Z" fill="var(--color-creme)" opacity="0.6" />
-                <text x="50" y="11" fill="var(--color-white)" font-size="7" font-family="var(--font-sans)"
-                    font-weight="bold" text-anchor="middle">N</text>
-                <text x="50" y="96" fill="var(--color-creme)" font-size="7" font-family="var(--font-sans)"
-                    text-anchor="middle" opacity="0.6">S</text>
-                <text x="9" y="52" fill="var(--color-creme)" font-size="7" font-family="var(--font-sans)"
-                    text-anchor="middle" opacity="0.6">O</text>
-                <text x="91" y="52" fill="var(--color-creme)" font-size="7" font-family="var(--font-sans)"
-                    text-anchor="middle" opacity="0.6">E</text>
+                <!-- Outer Luxury Rings and Bezel graduations -->
+                <circle cx="50" cy="50" r="46" stroke="var(--color-gold)" stroke-width="1.2" fill="none" opacity="0.8" />
+                <circle cx="50" cy="50" r="41" stroke="var(--color-gold)" stroke-width="1.5" stroke-dasharray="1 3" fill="none" opacity="0.45" />
+                <circle cx="50" cy="50" r="36" stroke="var(--color-creme)" stroke-width="0.5" stroke-opacity="0.2" fill="none" />
+                
+                <!-- Cardinal Cardinal Cross ticks -->
+                <line x1="50" y1="12" x2="50" y2="18" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
+                <line x1="50" y1="82" x2="50" y2="88" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
+                <line x1="12" y1="50" x2="18" y2="50" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
+                <line x1="82" y1="50" x2="88" y2="50" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
+                
+                <!-- Bevelled 3D metallic North Needle -->
+                <path d="M 50,14 L 47,46 L 50,49 Z" fill="var(--color-creme)" opacity="0.65" />
+                <path d="M 50,14 L 53,46 L 50,49 Z" fill="var(--color-white)" />
+                
+                <!-- Bevelled 3D metallic South Needle -->
+                <path d="M 50,86 L 47,54 L 50,51 Z" fill="var(--color-gold)" opacity="0.45" />
+                <path d="M 50,86 L 53,54 L 50,51 Z" fill="var(--color-gold)" opacity="0.8" />
+                
+                <!-- Center Gold Pivot -->
+                <circle cx="50" cy="50" r="4" fill="var(--color-gold)" />
+                <circle cx="50" cy="50" r="1.5" fill="var(--color-white)" />
+                
+                <!-- Labels -->
+                <text x="50" y="9" fill="var(--color-white)" font-size="7.5" font-family="var(--font-sans)" font-weight="bold" text-anchor="middle">N</text>
+                <text x="50" y="97" fill="var(--color-gold)" font-size="6.5" font-family="var(--font-sans)" font-weight="600" text-anchor="middle" opacity="0.8">S</text>
+                <text x="7" y="52.5" fill="var(--color-gold)" font-size="6.5" font-family="var(--font-sans)" font-weight="600" text-anchor="middle" opacity="0.8">O</text>
+                <text x="93" y="52.5" fill="var(--color-gold)" font-size="6.5" font-family="var(--font-sans)" font-weight="600" text-anchor="middle" opacity="0.8">E</text>
             </svg>
         </div>
 

@@ -131,15 +131,12 @@ body {
     color: var(--color-gold);
     font-family: var(--font-sans);
     width: 100%;
-    height: 100vh;
-    overflow: hidden;
-    /* No scroll at start */
+    min-height: 100vh;
+    overflow-y: auto;
     cursor: none;
 }
 
 body.is-revealed {
-    overflow-y: auto;
-    height: auto;
     cursor: auto;
 }
 
@@ -218,6 +215,7 @@ body.is-revealed a {
     z-index: -1;
 }
 
+.header.has-bg::before,
 body.is-revealed .header::before {
     opacity: 1;
 }
@@ -880,14 +878,9 @@ body.is-revealed .hero__footer {
     padding: 15rem 4rem 10rem;
     background: linear-gradient(to bottom, transparent, var(--color-bg) 15%, var(--color-bg));
     min-height: 120vh;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1.5s ease;
-}
-
-body.is-revealed .collections {
     opacity: 1;
     pointer-events: auto;
+    transition: opacity 1.5s ease;
 }
 
 .collections__header {
@@ -1552,9 +1545,16 @@ body.is-revealed .collections {
     width: 100px;
     height: 100px;
     z-index: 12;
-    pointer-events: none;
+    pointer-events: auto; /* Enable hover/drag pointer events */
+    cursor: pointer;
     opacity: 0.6;
-    transition: opacity 0.5s ease, transform 0.1s ease-out;
+    transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
+}
+
+.map-overlay__compass:hover {
+    opacity: 0.95;
+    transform: translateY(-50%) scale(1.08); /* Premium scale up */
+    filter: drop-shadow(0 0 8px rgba(163, 140, 108, 0.4)); /* Gold accent glow shadow */
 }
 
 .map-overlay__compass-svg {
@@ -1874,15 +1874,4 @@ body.is-webgl-active .hero__divider {
     text-shadow: none !important;
 }
 
-body.is-webgl-active .hero__cta {
-    color: transparent !important;
-    border-color: transparent !important;
-    background-color: transparent !important;
-}
-
-body.is-webgl-active .hero__cta::before,
-body.is-webgl-active .hero__cta::after {
-    background-color: transparent !important;
-    border-color: transparent !important;
-    opacity: 0 !important;
-}
+/* CTA button is drawn normally as DOM element and not hidden/transparent */

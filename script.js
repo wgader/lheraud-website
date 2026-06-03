@@ -24,7 +24,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── Events ────────────────────────────────────────────────────
     let idleTime = 0;
-    const cursorPrompt = cursor.querySelector('.cursor__prompt');
     let grainFrame = 0;
 
     // ─── WebGL Setup for Fluid Distortion ──────────────────────────
@@ -261,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 uniform float u_video_aspect;
                 void main() {
                     vec3 fluidColor = texture2D(tFluid, vUv).rgb;
-                    vec2 distortedUv = vUv - fluidColor.rg * uDistort * 0.0015;
+                    vec2 distortedUv = vUv - fluidColor.rg * uDistort * 0.001;
                     distortedUv = clamp(distortedUv, 0.001, 0.999);
                     
                     float screenAspect = u_resolution.x / u_resolution.y;
@@ -290,9 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     float activeReveal = max(reveal, uReveal);
                     
                     vec4 finalColor = mix(colorDark, colorFull, activeReveal);
-                    
-                    vec3 fluidGlowColor = vec3(0.639, 0.549, 0.424); // #A38C6C (Gold accent)
-                    finalColor.rgb += fluidGlowColor * fluidStrength * 0.15 * (1.0 - uReveal);
                     
                     gl_FragColor = finalColor;
                 }
@@ -483,9 +479,9 @@ document.addEventListener('DOMContentLoaded', () => {
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
-            // Cache original CSS styles before they get set to transparent
+            // Cache original CSS styles before they get set to transparent (excluding the CTA button so it's not distorted)
             const elementsToDraw = document.querySelectorAll(
-                '.hero__welcome, .hero__title-line, .hero__subtitle, .hero__divider, .hero__cta'
+                '.hero__welcome, .hero__title-line, .hero__subtitle, .hero__divider'
             );
             elementsToDraw.forEach(el => {
                 const style = window.getComputedStyle(el);
@@ -694,8 +690,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 splatStack.push({
                     x: x / window.innerWidth,
                     y: 1.0 - (y / window.innerHeight),
-                    dx: dx * 3.5,
-                    dy: -dy * 3.5
+                    dx: dx * 1.1,
+                    dy: -dy * 1.1
                 });
             }
         }
@@ -726,8 +722,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     splatStack.push({
                         x: x / window.innerWidth,
                         y: 1.0 - (y / window.innerHeight),
-                        dx: dx * 3.5,
-                        dy: -dy * 3.5
+                        dx: dx * 1.1,
+                        dy: -dy * 1.1
                     });
                 }
             }
@@ -743,8 +739,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', (e) => {
         if (e.target.closest('a')) return;
 
-        // EMPÊCHER le retour à l'intro si le site est déjà révélé
-        if (document.body.classList.contains('is-revealed')) return;
+        // Only trigger reveal click when looking at the hero section (scrolled less than 300px from top)
+        if (window.scrollY > 300) return;
 
         if (revealState === 'idle' || revealState === 'closing') {
             revealAnchorX = mouseX;
@@ -753,8 +749,9 @@ document.addEventListener('DOMContentLoaded', () => {
             revealState = 'opening';
             revealProgress = 0;
         } else {
-            revealAnchorX = W() / 2;
-            revealAnchorY = H() / 2;
+            // Re-activate unrevealed dark state
+            revealAnchorX = mouseX;
+            revealAnchorY = mouseY;
             revealState = 'closing';
         }
     });
@@ -798,12 +795,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealState = 'open';
                 document.body.classList.add('is-revealed');
 
-                // AUTOMATICALLY TURN OFF GRAIN ON REVEAL
-                if (filmGrain) {
-                    grainEnabled = false;
-                    filmGrain.style.opacity = '0';
-                    if (grainToggle) grainToggle.textContent = 'GRAIN : OFF';
-                }
+                // Film grain stays active on reveal as requested
             }
 
         } else if (revealState === 'open') {
@@ -866,7 +858,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Step 3: Run interaction splats (splat Stack)
             useProgram(splatProgram);
             gl.uniform1f(gl.getUniformLocation(splatProgram, 'aspectRatio'), w / h);
-            gl.uniform1f(gl.getUniformLocation(splatProgram, 'uRadius'), 0.00035);
+            gl.uniform1f(gl.getUniformLocation(splatProgram, 'uRadius'), 0.003); // radius: 0.3 / 100.0 = 0.003
 
             while (splatStack.length > 0) {
                 const splat = splatStack.shift();
@@ -890,14 +882,14 @@ document.addEventListener('DOMContentLoaded', () => {
             gl.uniform1f(gl.getUniformLocation(advectProgram, 'dt'), 0.016);
 
             // Advect velocity
-            gl.uniform1f(gl.getUniformLocation(advectProgram, 'uDissipation'), 0.992); // velocity dissipation
+            gl.uniform1f(gl.getUniformLocation(advectProgram, 'uDissipation'), 1.0); // velocity dissipation: 1.0
             bindTexture(advectProgram, 'uVelocity', velocityFBO.read.texture, 0);
             bindTexture(advectProgram, 'uSource', velocityFBO.read.texture, 1);
             blit(velocityFBO.write);
             velocityFBO.swap();
 
             // Advect density
-            gl.uniform1f(gl.getUniformLocation(advectProgram, 'uDissipation'), 0.965); // density dissipation
+            gl.uniform1f(gl.getUniformLocation(advectProgram, 'uDissipation'), 0.96); // density dissipation: 0.96
             bindTexture(advectProgram, 'uVelocity', velocityFBO.read.texture, 0);
             bindTexture(advectProgram, 'uSource', densityFBO.read.texture, 1);
             blit(densityFBO.write);
@@ -911,7 +903,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Step 6: Vorticity Confinement
             useProgram(vorticityProgram);
             gl.uniform1f(gl.getUniformLocation(vorticityProgram, 'dt'), 0.016);
-            gl.uniform1f(gl.getUniformLocation(vorticityProgram, 'uCurlValue'), 2.2);
+            gl.uniform1f(gl.getUniformLocation(vorticityProgram, 'uCurlValue'), 1.9); // curl: 1.9
             bindTexture(vorticityProgram, 'uVelocity', velocityFBO.read.texture, 0);
             bindTexture(vorticityProgram, 'uCurl', curlFBO.texture, 1);
             blit(velocityFBO.write);
@@ -924,7 +916,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Step 8: Clear pressure FBO
             useProgram(clearProgram);
-            gl.uniform1f(gl.getUniformLocation(clearProgram, 'uClearValue'), 0.85); // pressure dissipation
+            gl.uniform1f(gl.getUniformLocation(clearProgram, 'uClearValue'), 0.80); // pressure reduction: 0.80
             bindTexture(clearProgram, 'uTexture', pressureFBO.read.texture, 0);
             blit(pressureFBO.write);
             pressureFBO.swap();
@@ -932,7 +924,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Step 9: Jacobi solver for pressure (Solve Poisson equation)
             useProgram(pressureProgram);
             bindTexture(pressureProgram, 'uDivergence', divergenceFBO.texture, 1);
-            for (let i = 0; i < 16; i++) {
+            for (let i = 0; i < 4; i++) { // swirl: 4
                 bindTexture(pressureProgram, 'uPressure', pressureFBO.read.texture, 0);
                 blit(pressureFBO.write);
                 pressureFBO.swap();
@@ -951,7 +943,7 @@ document.addEventListener('DOMContentLoaded', () => {
             bindTexture(compositeProgram, 'u_video', videoTexture, 1);
             bindTexture(compositeProgram, 'u_text', textTexture, 2);
             gl.uniform2f(gl.getUniformLocation(compositeProgram, 'u_resolution'), canvasWebGL.width, canvasWebGL.height);
-            gl.uniform1f(gl.getUniformLocation(compositeProgram, 'uDistort'), 0.5); // distortion strength
+            gl.uniform1f(gl.getUniformLocation(compositeProgram, 'uDistort'), 0.40); // distortion: 0.40
             gl.uniform1f(gl.getUniformLocation(compositeProgram, 'uReveal'), revealProgress);
             gl.uniform1f(gl.getUniformLocation(compositeProgram, 'u_video_aspect'), videoAspect);
             blit(null); // Draw to screen!
@@ -973,28 +965,27 @@ document.addEventListener('DOMContentLoaded', () => {
         cursor.style.height = holeH + 'px';
         cursor.style.transform = `translate3d(${holeX - holeW / 2}px, ${holeY - holeH / 2}px, 0)`;
 
+        // ─── Cursor Visibility and Browser Cursor Toggle ──────────
+        const shouldHideCursor = (window.scrollY > 300) || (revealState === 'open') || (revealState === 'opening');
+        if (cursor) {
+            if (shouldHideCursor) {
+                cursor.style.display = 'none';
+                document.body.style.cursor = 'auto';
+                document.querySelectorAll('a, button, .timeline__item, .hero__coords-btn').forEach(el => el.style.cursor = 'pointer');
+            } else {
+                cursor.style.display = 'flex';
+                document.body.style.cursor = 'none';
+                document.querySelectorAll('a, button, .timeline__item, .hero__coords-btn').forEach(el => el.style.cursor = 'none');
+            }
+        }
+
         // ─── Scroll Container Interaction ──────────────────────────
         const scrollContainer = document.getElementById('scroll-container');
         if (scrollContainer) {
-            scrollContainer.style.pointerEvents = (revealState === 'open') ? 'auto' : 'none';
+            scrollContainer.style.pointerEvents = 'auto'; // Always interactive to allow scrolling at all times
         }
 
-        // ─── Cursor Prompt Logic (Hand + Text) ──────────────────────
-        if (cursorPrompt) {
-            // Check if mouse is over any interactive element
-            const elUnder = document.elementFromPoint(mouseX, mouseY);
-            const overInteractive = elUnder && elUnder.closest('a, img, button, .nav__link, .timeline__item, .nav__logo, #grain-toggle');
-
-            if (revealState === 'idle' && !overInteractive) {
-                idleTime++;
-                if (idleTime > 90) { // ~1.5 second idle
-                    cursorPrompt.style.opacity = '1';
-                }
-            } else {
-                idleTime = 0;
-                cursorPrompt.style.opacity = '0';
-            }
-        }
+        // Cursor Prompt Logic removed as requested
 
         // ─── Render Particles (La Part des Anges) ───────────────────
         if (ctx) {
@@ -1030,21 +1021,11 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(render);
     }
 
-    // ─── TEMP: Grain Toggle ────────────────────────────────────────
-    const grainToggle = document.getElementById('grain-toggle');
+    // ─── Film Grain (Always Active) ────────────────────────────────
     const filmGrain = document.querySelector('.film-grain');
     let grainEnabled = true; // ON by default
-
-    if (grainToggle && filmGrain) {
-        grainToggle.textContent = 'GRAIN : ON';
+    if (filmGrain) {
         filmGrain.style.opacity = '1'; // Ensure it's visible at start
-
-        grainToggle.addEventListener('click', (e) => {
-            e.stopPropagation();
-            grainEnabled = !grainEnabled;
-            filmGrain.style.opacity = grainEnabled ? '1' : '0';
-            grainToggle.textContent = grainEnabled ? 'GRAIN : ON' : 'GRAIN : OFF';
-        });
     }
 
     // ─── Collections Intersection Observer ────────────────────────
@@ -1093,7 +1074,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const particlesEl = document.getElementById('particles-canvas');
     const timelineEl = document.querySelector('.vertical-timeline');
     const grainEl = document.getElementById('grain-canvas');
-    const grainBtn = document.getElementById('grain-toggle');
 
     window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
@@ -1117,10 +1097,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (particlesEl) particlesEl.classList.toggle('is-hidden', shouldHide);
         if (timelineEl) timelineEl.classList.toggle('is-hidden', shouldHide);
-        if (grainEl) grainEl.classList.toggle('is-hidden', shouldHide);
-        if (grainBtn) {
-            grainBtn.style.opacity = shouldHide ? '0' : '1';
-            grainBtn.style.pointerEvents = shouldHide ? 'none' : 'auto';
+
+        // Hide grain overlay when scrolling past hero, keep active on hero
+        if (grainEl) {
+            grainEl.style.opacity = shouldHide ? '0' : '1';
+        }
+
+        // Show header background gradient on scroll
+        const header = document.querySelector('.header');
+        if (header) {
+            header.classList.toggle('has-bg', scrollY > 50 || revealState === 'open');
         }
     });
 
@@ -1634,6 +1620,54 @@ document.addEventListener('DOMContentLoaded', () => {
                 essential: true
             });
         }
+    }
+
+    // ─── Interactive Compass Drag Rotation ──────────────────────────
+    const compassEl = document.querySelector('.map-overlay__compass');
+    if (compassEl) {
+        let isDraggingCompass = false;
+
+        const rotateMapToCompass = (clientX, clientY) => {
+            if (!mapInstance) return;
+            const rect = compassEl.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const angleRad = Math.atan2(clientY - centerY, clientX - centerX);
+            const angleDeg = angleRad * 180 / Math.PI + 90;
+            mapInstance.setBearing(angleDeg);
+        };
+
+        compassEl.addEventListener('mousedown', (e) => {
+            isDraggingCompass = true;
+            rotateMapToCompass(e.clientX, e.clientY);
+        });
+
+        compassEl.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                isDraggingCompass = true;
+                rotateMapToCompass(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (isDraggingCompass) {
+                rotateMapToCompass(e.clientX, e.clientY);
+            }
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (isDraggingCompass && e.touches.length > 0) {
+                rotateMapToCompass(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDraggingCompass = false;
+        });
+
+        window.addEventListener('touchend', () => {
+            isDraggingCompass = false;
+        });
     }
 
     render();
