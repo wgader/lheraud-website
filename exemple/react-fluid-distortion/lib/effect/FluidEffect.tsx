@@ -1,0 +1,58 @@
+import { Effect, EffectAttribute } from 'postprocessing';
+import { Texture, Uniform, Vector3 } from 'three';
+import compositeFrag from '../glsl/composite.frag';
+import { type EffectProps } from '../types';
+import { hexToRgb } from '../utils';
+
+type Uniforms = {
+    tFluid: Texture;
+    uColor: Vector3;
+    uBackgroundColor: Vector3;
+    uRainbow: boolean;
+    uShowBackground: boolean;
+    uDistort: number;
+    uBlend: number;
+    uIntensity: number;
+};
+
+export class FluidEffect extends Effect {
+    state: EffectProps;
+
+    constructor(props: EffectProps) {
+        const uniforms: Record<keyof Uniforms, Uniform> = {
+            tFluid: new Uniform(props.tFluid),
+            uDistort: new Uniform(props.distortion),
+            uRainbow: new Uniform(props.rainbow),
+            uIntensity: new Uniform(props.intensity),
+            uBlend: new Uniform(props.blend),
+            uShowBackground: new Uniform(props.showBackground),
+            uColor: new Uniform(hexToRgb(props.fluidColor!)),
+            uBackgroundColor: new Uniform(hexToRgb(props.backgroundColor!)),
+        };
+
+        super('FluidEffect', compositeFrag, {
+            blendFunction: props.blendFunction,
+            attributes: EffectAttribute.CONVOLUTION,
+            uniforms: new Map(Object.entries(uniforms)),
+        });
+
+        this.state = props;
+    }
+
+    private updateUniform<K extends keyof Uniforms>(key: K, value: Uniforms[K]) {
+        const uniform = this.uniforms.get(key);
+        if (uniform) {
+            uniform.value = value;
+        }
+    }
+
+    update() {
+        this.updateUniform('uIntensity', this.state.intensity);
+        this.updateUniform('uDistort', this.state.distortion);
+        this.updateUniform('uRainbow', this.state.rainbow);
+        this.updateUniform('uBlend', this.state.blend);
+        this.updateUniform('uShowBackground', this.state.showBackground);
+        this.updateUniform('uColor', hexToRgb(this.state.fluidColor));
+        this.updateUniform('uBackgroundColor', hexToRgb(this.state.backgroundColor));
+    }
+}

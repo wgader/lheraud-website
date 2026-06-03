@@ -175,40 +175,6 @@ body.is-revealed a {
     align-items: center;
 }
 
-.cursor__corner {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    border-color: var(--color-gold);
-    border-style: solid;
-    transition: none;
-    will-change: transform, opacity;
-}
-
-.cursor__corner--tl {
-    top: -1px;
-    left: -1px;
-    border-width: 2px 0 0 2px;
-}
-
-.cursor__corner--tr {
-    top: -1px;
-    right: -1px;
-    border-width: 2px 2px 0 0;
-}
-
-.cursor__corner--bl {
-    bottom: -1px;
-    left: -1px;
-    border-width: 0 0 2px 2px;
-}
-
-.cursor__corner--br {
-    bottom: -1px;
-    right: -1px;
-    border-width: 0 2px 2px 0;
-}
-
 
 /* ==================== VIDEO ==================== */
 .video-bg {
@@ -1895,4 +1861,28 @@ body.is-revealed .collections {
     .map-overlay__header {
         padding: 2rem;
     }
+}
+
+/* ==================== WEBGL FLUID INTERACTION UTILS ==================== */
+body.is-webgl-active .hero__welcome,
+body.is-webgl-active .hero__title-line,
+body.is-webgl-active .hero__subtitle,
+body.is-webgl-active .hero__divider {
+    color: transparent !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    text-shadow: none !important;
+}
+
+body.is-webgl-active .hero__cta {
+    color: transparent !important;
+    border-color: transparent !important;
+    background-color: transparent !important;
+}
+
+body.is-webgl-active .hero__cta::before,
+body.is-webgl-active .hero__cta::after {
+    background-color: transparent !important;
+    border-color: transparent !important;
+    opacity: 0 !important;
 }
