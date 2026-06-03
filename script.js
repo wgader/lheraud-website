@@ -6,11 +6,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let mouseX = -300, mouseY = -300;
     let cx = -300, cy = -300;
     let cw = 280, ch = 160;
+    
+    // Blob positions for liquid trailing
+    let b1X = -300, b1Y = -300;
+    let b2X = -300, b2Y = -300;
+    let b3X = -300, b3Y = -300;
 
     // ─── Reveal state ──────────────────────────────────────────────
     let revealState = 'idle';
     let revealProgress = 0;
     let revealAnchorX = 0;
+    let revealAnchorY = 0;
     let revealInitHalfW = 0;
 
     const OPEN_SPEED = 0.02;
@@ -26,6 +32,217 @@ document.addEventListener('DOMContentLoaded', () => {
     let idleTime = 0;
     const cursorPrompt = cursor.querySelector('.cursor__prompt');
     let grainFrame = 0;
+
+    // ─── WebGL Setup for Liquid Reveal ──────────────────────────────
+    const canvasWebGL = document.getElementById('webgl-canvas');
+    const videoEl = document.getElementById('bg-video');
+    let gl = null;
+    let webglActive = false;
+    let webglProgram = null;
+    let webglTexture = null;
+
+    // Uniform locations
+    let uVideoLoc, uResLoc, uTimeLoc, uRadiusLoc, uRevealLoc, uRevealCenterLoc, uBlob1Loc, uBlob2Loc, uBlob3Loc, uVideoAspectLoc;
+
+    if (canvasWebGL && videoEl) {
+        gl = canvasWebGL.getContext('webgl') || canvasWebGL.getContext('experimental-webgl');
+        if (gl) {
+            webglActive = true;
+
+            // Set fallback video off-screen/invisible but keep playing
+            videoEl.style.position = 'fixed';
+            videoEl.style.width = '1px';
+            videoEl.style.height = '1px';
+            videoEl.style.opacity = '0.01';
+            videoEl.style.pointerEvents = 'none';
+
+            // Vertex Shader
+            const vsSource = `
+                attribute vec2 position;
+                varying vec2 v_texCoord;
+                void main() {
+                    v_texCoord = position * 0.5 + 0.5;
+                    v_texCoord.y = 1.0 - v_texCoord.y; // Flip Y for video texture mapping
+                    gl_Position = vec4(position, 0.0, 1.0);
+                }
+            `;
+
+            // Fragment Shader
+            const fsSource = `
+                precision mediump float;
+                varying vec2 v_texCoord;
+                uniform sampler2D u_video;
+                uniform vec2 u_resolution;
+                uniform float u_time;
+                uniform float u_radius;
+                uniform float u_reveal_progress;
+                uniform vec2 u_reveal_center;
+                uniform vec2 u_blob1;
+                uniform vec2 u_blob2;
+                uniform vec2 u_blob3;
+                uniform float u_video_aspect;
+
+                void main() {
+                    // Normalize screen coordinates
+                    vec2 uv = gl_FragCoord.xy / u_resolution;
+                    float aspect = u_resolution.x / u_resolution.y;
+                    
+                    // Adjust coords for aspect ratio to keep metaballs circular
+                    vec2 uvAspect = vec2(uv.x * aspect, uv.y);
+                    vec2 b1 = vec2(u_blob1.x * aspect, u_blob1.y);
+                    vec2 b2 = vec2(u_blob2.x * aspect, u_blob2.y);
+                    vec2 b3 = vec2(u_blob3.x * aspect, u_blob3.y);
+                    vec2 revCenter = vec2(u_reveal_center.x * aspect, u_reveal_center.y);
+
+                    // Organic space warp (wobble) to simulate fluid turbulence
+                    vec2 warp = vec2(
+                        sin(uvAspect.y * 10.0 + u_time * 2.0) * 0.012,
+                        cos(uvAspect.x * 10.0 - u_time * 1.8) * 0.012
+                    ) * (1.0 - u_reveal_progress);
+                    
+                    vec2 warpedUV = uvAspect + warp;
+
+                    // Calculate distance to each blob
+                    float d1 = length(warpedUV - b1);
+                    float d2 = length(warpedUV - b2);
+                    float d3 = length(warpedUV - b3);
+
+                    // Exponential density kernel for smooth liquid metaball blending
+                    float r1 = u_radius;
+                    float r2 = u_radius * 0.85;
+                    float r3 = u_radius * 0.70;
+
+                    float density = exp(-(d1 * d1) / (r1 * r1));
+                    density += exp(-(d2 * d2) / (r2 * r2)) * 0.85;
+                    density += exp(-(d3 * d3) / (r3 * r3)) * 0.65;
+
+                    // Add the expanding central reveal blob
+                    if (u_reveal_progress > 0.001) {
+                        float dRev = length(warpedUV - revCenter);
+                        // Radius of reveal blob grows from 0 to 2.5
+                        float rRev = mix(0.001, 2.5, u_reveal_progress);
+                        float revDensity = exp(-(dRev * dRev) / (rRev * rRev));
+                        density += revDensity * 2.0 * u_reveal_progress;
+                    }
+
+                    // Threshold the density field to create a crisp yet liquid drop mask
+                    // Threshold goes from 0.35 (idle) down to 0.0 (fully open) to ensure full coverage
+                    float threshold = mix(0.35, 0.0, u_reveal_progress);
+                    float mask = smoothstep(threshold - 0.03, threshold + 0.03, density);
+
+                    // Displacement refraction along the edge of the liquid boundary
+                    float edgeGlow = smoothstep(0.05, 0.0, abs(density - threshold));
+                    vec2 displace = (uvAspect - b1) * edgeGlow * 0.025 * (1.0 - u_reveal_progress) * sin(u_time * 3.0 + density * 15.0);
+
+                    // Implement object-fit: cover for the video texture
+                    float screenAspect = u_resolution.x / u_resolution.y;
+                    vec2 texCoord = v_texCoord;
+                    if (screenAspect > u_video_aspect) {
+                        // Screen is wider than video: crop Y
+                        texCoord.y = (texCoord.y - 0.5) * (u_video_aspect / screenAspect) + 0.5;
+                    } else {
+                        // Screen is taller than video: crop X
+                        texCoord.x = (texCoord.x - 0.5) * (screenAspect / u_video_aspect) + 0.5;
+                    }
+
+                    // Apply refraction displacement
+                    texCoord += displace;
+                    texCoord = clamp(texCoord, 0.001, 0.999);
+
+                    vec4 videoColor = texture2D(u_video, texCoord);
+
+                    // Grayscale conversion for dark backdrop layer (default state)
+                    float gray = dot(videoColor.rgb, vec3(0.299, 0.587, 0.114));
+
+                    // Luxury deep navy & gold desaturated tint for background (outside mask)
+                    vec3 tintColor = vec3(0.12, 0.15, 0.22);
+                    vec3 darkGraded = vec3(gray) * tintColor * 2.5;
+                    darkGraded += videoColor.rgb * vec3(0.2, 0.16, 0.1) * (1.0 - gray) * 0.5;
+
+                    // Mix graded and original video textures
+                    vec3 finalColor = mix(darkGraded, videoColor.rgb, mask);
+
+                    // Gold border ring highlight
+                    vec3 goldColor = vec3(0.64, 0.55, 0.43);
+                    finalColor += goldColor * edgeGlow * 0.4 * (1.0 - u_reveal_progress);
+
+                    gl_FragColor = vec4(finalColor, 1.0);
+                }
+            `;
+
+            function compileShader(gl, source, type) {
+                const shader = gl.createShader(type);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+                    gl.deleteShader(shader);
+                    return null;
+                }
+                return shader;
+            }
+
+            const vs = compileShader(gl, vsSource, gl.VERTEX_SHADER);
+            const fs = compileShader(gl, fsSource, gl.FRAGMENT_SHADER);
+
+            webglProgram = gl.createProgram();
+            gl.attachShader(webglProgram, vs);
+            gl.attachShader(webglProgram, fs);
+            gl.linkProgram(webglProgram);
+
+            if (!gl.getProgramParameter(webglProgram, gl.LINK_STATUS)) {
+                console.error('Program link error:', gl.getProgramInfoLog(webglProgram));
+            }
+
+            // Setup quad vertices
+            const positionBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            const positions = new Float32Array([
+                -1, -1,
+                1, -1,
+                -1, 1,
+                -1, 1,
+                1, -1,
+                1, 1,
+            ]);
+            gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
+
+            const positionLocation = gl.getAttribLocation(webglProgram, 'position');
+            gl.enableVertexAttribArray(positionLocation);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+            // Create texture
+            webglTexture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, webglTexture);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+            // Get uniform locations
+            uVideoLoc = gl.getUniformLocation(webglProgram, 'u_video');
+            uResLoc = gl.getUniformLocation(webglProgram, 'u_resolution');
+            uTimeLoc = gl.getUniformLocation(webglProgram, 'u_time');
+            uRadiusLoc = gl.getUniformLocation(webglProgram, 'u_radius');
+            uRevealLoc = gl.getUniformLocation(webglProgram, 'u_reveal_progress');
+            uRevealCenterLoc = gl.getUniformLocation(webglProgram, 'u_reveal_center');
+            uBlob1Loc = gl.getUniformLocation(webglProgram, 'u_blob1');
+            uBlob2Loc = gl.getUniformLocation(webglProgram, 'u_blob2');
+            uBlob3Loc = gl.getUniformLocation(webglProgram, 'u_blob3');
+            uVideoAspectLoc = gl.getUniformLocation(webglProgram, 'u_video_aspect');
+
+            function resizeCanvas() {
+                const dpr = window.devicePixelRatio || 1;
+                canvasWebGL.width = window.innerWidth * dpr;
+                canvasWebGL.height = window.innerHeight * dpr;
+                gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+        } else {
+            canvasWebGL.style.display = 'none';
+        }
+    }
 
     // ─── Grain Canvas Setup ──────────────────────────────────────
     const grainCanvas = document.getElementById('grain-canvas');
@@ -84,10 +301,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (revealState === 'idle' || revealState === 'closing') {
             revealAnchorX = mouseX;
+            revealAnchorY = mouseY;
             revealInitHalfW = cw / 2;
             revealState = 'opening';
             revealProgress = 0;
         } else {
+            revealAnchorX = W() / 2;
+            revealAnchorY = H() / 2;
             revealState = 'closing';
         }
     });
@@ -97,9 +317,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const w = W(), h = H();
 
         let tx = mouseX, ty = mouseY;
-        let tw = 280, th = 160;
-
-        cursor.style.borderRadius = '2px';
+        let tw = 240, th = 240;
 
         // LERP "Ultra Smooth" (Encore plus lent et cinématographique)
         cx = lerp(cx, tx, 0.05);
@@ -107,8 +325,8 @@ document.addEventListener('DOMContentLoaded', () => {
         cw = lerp(cw, tw, 0.05);
         ch = lerp(ch, th, 0.05);
 
-        // Hide corners during reveal
-        const cornersVisible = revealState === 'idle';
+        // Hide corners during reveal (fallback mode only)
+        const cornersVisible = revealState === 'idle' && !webglActive;
         corners.forEach(c => c.style.opacity = cornersVisible ? '1' : '0');
 
         // ── Compute reveal hole ───────────────────────────────────
@@ -122,11 +340,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const e = easeOut(revealProgress);
 
             holeW = lerp(cw, maxHalfW * 2, e);
-            holeX = revealAnchorX; // stays centered on click point
+            // Glide reveal center smoothly from click point to screen center to prevent jumps/bugs on edge clicks
+            holeX = lerp(revealAnchorX, w / 2, e);
 
             const eY = Math.min(1, revealProgress * 4);
             holeH = lerp(ch, h * 1.5, eY);
-            holeY = cy; // height expands from current mouse Y
+            holeY = lerp(revealAnchorY, h / 2, eY);
 
             if (revealProgress >= 1) {
                 revealState = 'open';
@@ -152,18 +371,77 @@ document.addEventListener('DOMContentLoaded', () => {
             const e = easeOut(revealProgress);
 
             holeW = lerp(cw, maxHalfW * 2, e);
-            holeX = lerp(cx, revealAnchorX, e); // glides back to mouse
+            // Glide center smoothly back to current mouse
+            holeX = lerp(cx, revealAnchorX, e);
 
             const eY = Math.min(1, revealProgress * 4);
             holeH = lerp(ch, h * 1.5, eY);
-            holeY = cy; // shrinks towards mouse Y
+            holeY = lerp(cy, revealAnchorY, eY);
 
             if (revealProgress <= 0) {
                 revealState = 'idle';
             }
         }
 
-        // Apply to cursor (box-shadow handles the darkness outside)
+        // Update metaball blob positions with organic lagging
+        if (mouseX !== -300) {
+            if (b1X === -300) {
+                b1X = b2X = b3X = mouseX;
+                b1Y = b2Y = b3Y = mouseY;
+            } else {
+                b1X = lerp(b1X, mouseX, 0.12);
+                b1Y = lerp(b1Y, mouseY, 0.12);
+                
+                b2X = lerp(b2X, b1X, 0.08);
+                b2Y = lerp(b2Y, b1Y, 0.08);
+                
+                b3X = lerp(b3X, b2X, 0.06);
+                b3Y = lerp(b3Y, b2Y, 0.06);
+            }
+        }
+
+        // Apply WebGL scene update and draw
+        if (webglActive && videoEl.readyState >= 2) {
+            // Update texture from playing video
+            gl.bindTexture(gl.TEXTURE_2D, webglTexture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, videoEl);
+
+            // Video aspect ratio
+            let videoAspect = 16.0 / 9.0;
+            if (videoEl.videoWidth && videoEl.videoHeight) {
+                videoAspect = videoEl.videoWidth / videoEl.videoHeight;
+            }
+
+            // Draw fullscreen quad with liquid reveal shader
+            gl.useProgram(webglProgram);
+            gl.uniform1i(uVideoLoc, 0);
+            gl.uniform2f(uResLoc, canvasWebGL.width, canvasWebGL.height);
+            gl.uniform1f(uTimeLoc, performance.now() * 0.001);
+            gl.uniform1f(uRadiusLoc, 120.0 / h);
+            gl.uniform1f(uRevealLoc, revealProgress);
+            
+            // Pass the glide center and blob coordinates in normalized 0..1 space (Y flipped for WebGL)
+            gl.uniform2f(uRevealCenterLoc, holeX / w, (h - holeY) / h);
+            gl.uniform2f(uBlob1Loc, b1X / w, (h - b1Y) / h);
+            gl.uniform2f(uBlob2Loc, b2X / w, (h - b2Y) / h);
+            gl.uniform2f(uBlob3Loc, b3X / w, (h - b3Y) / h);
+            gl.uniform1f(uVideoAspectLoc, videoAspect);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+            // Disable CSS overlay styles (WebGL renders the visual mask)
+            cursor.style.boxShadow = 'none';
+            cursor.style.border = 'none';
+            cursor.style.backgroundColor = 'transparent';
+            cursor.style.backdropFilter = 'none';
+            cursor.style.webkitBackdropFilter = 'none';
+            cursor.style.borderRadius = '0%';
+        } else if (!webglActive) {
+            // CSS Fallback Mode cursor styling
+            cursor.style.borderRadius = ((1 - revealProgress) * 50) + '%';
+        }
+
+        // Apply to cursor (box-shadow handles the darkness outside in fallback, or stays transparent in WebGL)
         cursor.style.width = holeW + 'px';
         cursor.style.height = holeH + 'px';
         cursor.style.transform = `translate3d(${holeX - holeW / 2}px, ${holeY - holeH / 2}px, 0)`;
@@ -217,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < data.length; i += 4) {
                 const v = (Math.random() * 255) | 0;
                 data[i] = v; data[i + 1] = v; data[i + 2] = v;
-                data[i + 3] = 6; // Noise intensity
+                data[i + 3] = 4; // Noise intensity
             }
             grainCtx.putImageData(grainImageData, 0, 0);
         }
