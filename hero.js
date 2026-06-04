@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (canvasWebGL && videoEl) {
         gl = canvasWebGL.getContext('webgl') || canvasWebGL.getContext('experimental-webgl');
-        if (gl) {
+        if (gl && !isMobile) {
             webglActive = true;
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
