@@ -355,12 +355,13 @@ body.is-revealed .header::before {
 @media (max-width: 768px) {
     /* Header Responsiveness */
     .header {
-        padding: 1rem 1.5rem;
+        padding: 2.2rem 2.2rem 1rem; /* Increased top/side padding to stay inside the frame */
     }
 
-    /* Move Professional Access button inside the menu overlay */
-    .header__action-container {
-        display: none !important; /* Hide header action button on mobile viewports */
+    .header .btn--framed {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.55rem;
+        letter-spacing: 1px;
     }
 
     .header__logo-container {
@@ -418,6 +419,13 @@ body.is-revealed .header::before {
 
     .menu-overlay__submenu {
         padding-left: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    /* Move Professional Access button inside the menu overlay only on mobile viewports */
+    .header__action-container {
+        display: none !important; /* Hide header action button on mobile only */
     }
 
     /* Show and center professional access button inside mobile menu overlay */
