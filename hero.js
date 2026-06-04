@@ -7,65 +7,21 @@ document.addEventListener('DOMContentLoaded', () => {
         cursor.style.opacity = '1';
     }
 
-    // ─── Signature Mask Path Length Dynamic Calculation ───────────
-    const maskPath = document.getElementById('mask-path');
-    const maskStem = document.getElementById('mask-stem');
-    const accentPath = document.getElementById('accent-path');
-
-    const WRITE_SPEED = 750; // pixels per second — uniform across all paths
-    const BASE_DELAY = 0.8;  // seconds before first stroke begins
-
-    const startSignatureAnimation = () => {
-        if (maskPath) {
-            const mainLength = maskPath.getTotalLength();
-            maskPath.style.strokeDasharray = mainLength;
-            maskPath.style.strokeDashoffset = mainLength;
-            const mainDuration = mainLength / WRITE_SPEED;
-            maskPath.style.animation = 'writeHand ' + mainDuration.toFixed(2) + 's linear ' + BASE_DELAY + 's forwards';
-
-            // Chain the d-stem animation to start right when the main path ends
-            if (maskStem) {
-                const stemLength = maskStem.getTotalLength();
-                maskStem.style.strokeDasharray = stemLength;
-                maskStem.style.strokeDashoffset = stemLength;
-                const stemDuration = stemLength / WRITE_SPEED;
-                const stemDelay = BASE_DELAY + mainDuration;
-                maskStem.style.animation = 'writeHand ' + stemDuration.toFixed(2) + 's linear ' + stemDelay.toFixed(2) + 's forwards';
-            }
-
-            // Accent appears at ~50% of main path (during é writing, not at the end)
-            if (accentPath) {
-                const accentLength = accentPath.getTotalLength();
-                accentPath.style.strokeDasharray = accentLength;
-                accentPath.style.strokeDashoffset = accentLength;
-                const accentDelay = BASE_DELAY + mainDuration * 0.50;
-                accentPath.style.animation = 'writeAccent 0.35s cubic-bezier(0.25, 1, 0.5, 1) ' + accentDelay.toFixed(2) + 's forwards';
-            }
-        }
-    };
-
-    // Delay the signature animation until the video actually starts playing
-    if (videoEl) {
-        if (!videoEl.paused && videoEl.currentTime > 0) {
-            startSignatureAnimation();
-        } else {
-            videoEl.addEventListener('playing', startSignatureAnimation, { once: true });
-        }
-    } else {
-        startSignatureAnimation();
-    }
-
     // ─── Mouse ─────────────────────────────────────────────────────
     let mouseX = -300, mouseY = -300;
     let cx = -300, cy = -300;
     let cw = 280, ch = 160;
 
     // ─── Reveal state ──────────────────────────────────────────────
-    let revealState = 'idle';
-    let revealProgress = 0;
+    let revealState = isMobile ? 'open' : 'idle';
+    let revealProgress = isMobile ? 1 : 0;
     let revealAnchorX = 0;
     let revealAnchorY = 0;
     let revealInitHalfW = 0;
+
+    if (isMobile) {
+        document.body.classList.add('is-revealed');
+    }
 
     const OPEN_SPEED = 0.02;
 
@@ -762,6 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('click', (e) => {
+        if (isMobile) return;
         if (e.target.closest('a')) return;
         if (window.scrollY > 300) return;
 
@@ -957,12 +914,12 @@ document.addEventListener('DOMContentLoaded', () => {
             cursor.style.transform = `translate3d(${holeX - holeW / 2}px, ${holeY - holeH / 2}px, 0)`;
         }
 
-        const shouldHideCursor = (window.scrollY > 300) || (revealState === 'open') || (webglActive && revealState === 'opening');
+        const shouldHideCursor = isMobile || (window.scrollY > 300) || (revealState === 'open') || (webglActive && revealState === 'opening');
         if (cursor) {
             if (shouldHideCursor) {
                 cursor.style.display = 'none';
+                document.body.style.cursor = 'auto';
                 if (!isMobile) {
-                    document.body.style.cursor = 'auto';
                     document.querySelectorAll('a, button, .timeline__item, .hero__coords-btn').forEach(el => el.style.cursor = 'pointer');
                 }
             } else {

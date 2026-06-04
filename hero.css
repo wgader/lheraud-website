@@ -54,6 +54,9 @@ body.is-revealed .hero {
     display: flex;
     justify-content: center;
     align-items: center;
+    clip-path: inset(0 100% 0 0);
+    animation: revealSignature 2.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+    animation-delay: 0.8s;
 }
 
 .hero__signature {
@@ -64,36 +67,9 @@ body.is-revealed .hero {
     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
 }
 
-.hero__signature-container #mask-path {
-    stroke-dasharray: 5000;
-    stroke-dashoffset: 5000;
-    animation: writeHand 4.2s linear forwards;
-    animation-delay: 0.8s;
-}
-
-.hero__signature-container #mask-stem {
-    stroke-dasharray: 5000;
-    stroke-dashoffset: 5000;
-    animation: writeHand 1.0s linear forwards;
-    animation-delay: 5.0s;
-}
-
-.hero__signature-container #accent-path {
-    stroke-dasharray: 100;
-    stroke-dashoffset: 100;
-    animation: writeAccent 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    animation-delay: 3.0s;
-}
-
-@keyframes writeHand {
+@keyframes revealSignature {
     to {
-        stroke-dashoffset: 0;
-    }
-}
-
-@keyframes writeAccent {
-    to {
-        stroke-dashoffset: 0;
+        clip-path: inset(0 0 0 0);
     }
 }
 
