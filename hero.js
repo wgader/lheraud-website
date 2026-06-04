@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 1024;
     const cursor = document.getElementById('cursor');
 
     // ─── Signature Mask Path Length Dynamic Calculation ───────────
@@ -42,11 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let cw = 280, ch = 160;
 
     // ─── Reveal state ──────────────────────────────────────────────
-    let revealState = 'idle';
-    let revealProgress = 0;
+    let revealState = isMobile ? 'open' : 'idle';
+    let revealProgress = isMobile ? 1 : 0;
     let revealAnchorX = 0;
     let revealAnchorY = 0;
     let revealInitHalfW = 0;
+
+    if (isMobile) {
+        document.body.classList.add('is-revealed');
+    }
 
     const OPEN_SPEED = 0.02;
 
@@ -90,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (canvasWebGL && videoEl) {
         gl = canvasWebGL.getContext('webgl') || canvasWebGL.getContext('experimental-webgl');
-        if (gl) {
+        if (gl && !isMobile) {
             webglActive = true;
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
@@ -530,6 +535,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 textCtx.clearRect(0, 0, w, h);
 
+                const canvasRect = canvasWebGL.getBoundingClientRect();
+                const canvasTop = canvasRect.top;
+
                 elementsToDraw.forEach(el => {
                     const rect = el.getBoundingClientRect();
                     const style = window.getComputedStyle(el);
@@ -538,9 +546,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     const cached = originalStyles.get(el) || {};
 
+                    const adjustedTop = rect.top - canvasTop;
+                    const adjustedBottom = rect.bottom - canvasTop;
+
                     if (el.classList.contains('hero__divider')) {
                         textCtx.fillStyle = cached.backgroundColor || '#dbcebc';
-                        textCtx.fillRect(rect.left, rect.top, rect.width, rect.height);
+                        textCtx.fillRect(rect.left, adjustedTop, rect.width, rect.height);
                     } else {
                         let text = el.innerText || el.textContent;
                         if (cached.textTransform === 'uppercase') {
@@ -560,9 +571,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             textCtx.textBaseline = 'top';
 
                             const textX = rect.left + rect.width / 2;
-                            textCtx.fillText(text, textX, rect.top);
+                            textCtx.fillText(text, textX, adjustedTop);
 
-                            const lineY = rect.bottom - 2;
+                            const lineY = adjustedBottom - 2;
                             textCtx.strokeStyle = isHovered ? '#ffffff' : (cached.color || '#dbcebc');
                             textCtx.lineWidth = 1;
                             textCtx.beginPath();
@@ -595,7 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             } else if (textAlign === 'right') {
                                 x = rect.right;
                             }
-                            textCtx.fillText(text, x, rect.top);
+                            textCtx.fillText(text, x, adjustedTop);
                         }
                     }
                 });
@@ -609,16 +620,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
-            const playVideo = () => {
-                videoEl.play().catch(e => console.log("Video play deferred:", e));
-            };
-            playVideo();
-            document.addEventListener('mousemove', playVideo, { once: true });
-            document.addEventListener('click', playVideo, { once: true });
-            document.addEventListener('touchstart', playVideo, { once: true });
         } else {
             canvasWebGL.style.display = 'none';
         }
+
+        // Setup video play handlers so it always autoplays and resumes, even on mobile
+        const playVideo = () => {
+            if (videoEl) {
+                videoEl.play().catch(e => console.log("Video play deferred:", e));
+            }
+        };
+        playVideo();
+        document.addEventListener('mousemove', playVideo, { once: true });
+        document.addEventListener('click', playVideo, { once: true });
+        document.addEventListener('touchstart', playVideo, { once: true });
     }
 
     // ─── Grain Canvas Setup ──────────────────────────────────────
@@ -720,6 +735,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('click', (e) => {
+        if (isMobile) return; // Disable reveal toggle on mobile
         if (e.target.closest('a')) return;
         if (window.scrollY > 300) return;
 
@@ -915,12 +931,14 @@ document.addEventListener('DOMContentLoaded', () => {
             cursor.style.transform = `translate3d(${holeX - holeW / 2}px, ${holeY - holeH / 2}px, 0)`;
         }
 
-        const shouldHideCursor = (window.scrollY > 300) || (revealState === 'open') || (revealState === 'opening');
+        const shouldHideCursor = isMobile || (window.scrollY > 300) || (revealState === 'open') || (revealState === 'opening');
         if (cursor) {
             if (shouldHideCursor) {
                 cursor.style.display = 'none';
                 document.body.style.cursor = 'auto';
-                document.querySelectorAll('a, button, .timeline__item, .hero__coords-btn').forEach(el => el.style.cursor = 'pointer');
+                if (!isMobile) {
+                    document.querySelectorAll('a, button, .timeline__item, .hero__coords-btn').forEach(el => el.style.cursor = 'pointer');
+                }
             } else {
                 cursor.style.display = 'flex';
                 document.body.style.cursor = 'none';
