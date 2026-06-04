@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domaine Lhéraud - Carte 3D</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="map.css">
+    <!-- MapLibre GL JS for 3D Satellite Map -->
+    <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
+    <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Map Container -->
+    <div class="map-page-container">
+        <header class="map-overlay__header">
+            <h2 class="map-overlay__title">DOMAINE LHÉRAUD</h2>
+            <a href="index.html" class="map-overlay__close-btn" aria-label="Retour à l'accueil">
+                <span class="map-overlay__close-text">RETOUR</span>
+                <span class="map-overlay__close-icon"></span>
+            </a>
+        </header>
+
+        <div class="map-overlay__canvas">
+            <div id="map-3d-canvas" style="width: 100%; height: 100%;"></div>
+        </div>
+
+        <!-- Compass Widget -->
+        <div class="map-overlay__compass">
+            <svg class="map-overlay__compass-svg" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="46" stroke="var(--color-gold)" stroke-width="1.2" fill="none" opacity="0.8" />
+                <circle cx="50" cy="50" r="41" stroke="var(--color-gold)" stroke-width="1.5" stroke-dasharray="1 3" fill="none" opacity="0.45" />
+                <circle cx="50" cy="50" r="36" stroke="var(--color-creme)" stroke-width="0.5" stroke-opacity="0.2" fill="none" />
+                <line x1="50" y1="12" x2="50" y2="18" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
+                <line x1="50" y1="82" x2="50" y2="88" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
+                <line x1="12" y1="50" x2="18" y2="50" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
+                <line x1="82" y1="50" x2="88" y2="50" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
+                <path d="M 50,14 L 47,46 L 50,49 Z" fill="var(--color-creme)" opacity="0.65" />
+                <path d="M 50,14 L 53,46 L 50,49 Z" fill="var(--color-white)" />
+                <path d="M 50,86 L 47,54 L 50,51 Z" fill="var(--color-gold)" opacity="0.45" />
+                <path d="M 50,86 L 53,54 L 50,51 Z" fill="var(--color-gold)" opacity="0.8" />
+                <circle cx="50" cy="50" r="4" fill="var(--color-gold)" />
+                <circle cx="50" cy="50" r="1.5" fill="var(--color-white)" />
+                <text x="50" y="9" fill="var(--color-white)" font-size="7.5" font-family="var(--font-sans)" font-weight="bold" text-anchor="middle">N</text>
+                <text x="50" y="97" fill="var(--color-gold)" font-size="6.5" font-family="var(--font-sans)" font-weight="600" text-anchor="middle" opacity="0.8">S</text>
+                <text x="7" y="52.5" fill="var(--color-gold)" font-size="6.5" font-family="var(--font-sans)" font-weight="600" text-anchor="middle" opacity="0.8">O</text>
+                <text x="93" y="52.5" fill="var(--color-gold)" font-size="6.5" font-family="var(--font-sans)" font-weight="600" text-anchor="middle" opacity="0.8">E</text>
+            </svg>
+        </div>
+
+        <!-- Carousel and Stats Footer -->
+        <div class="map-overlay__footer">
+            <div class="map-overlay__carousel">
+                <button class="map-overlay__carousel-btn map-overlay__carousel-btn--prev" id="map-prev-btn" aria-label="Précédent">
+                    <svg viewBox="0 0 100 100" class="map-overlay__carousel-arrow">
+                        <path d="M 60,30 L 40,50 L 60,70" stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+                <div class="map-overlay__carousel-info">
+                    <span class="map-overlay__carousel-counter"><span id="map-current-num">1</span>/5</span>
+                    <h3 class="map-overlay__carousel-title" id="map-current-title">Les Vignobles</h3>
+                </div>
+                <button class="map-overlay__carousel-btn map-overlay__carousel-btn--next" id="map-next-btn" aria-label="Suivant">
+                    <svg viewBox="0 0 100 100" class="map-overlay__carousel-arrow">
+                        <path d="M 40,30 L 60,50 L 40,70" stroke="currentColor" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="map-overlay__stats">
+                <div class="map-overlay__stat-item">
+                    <span class="map-overlay__stat-label">COORDONNÉES</span>
+                    <span class="map-overlay__stat-value" id="map-stat-coords">45.614500, -0.078500</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="map.js"></script>
+</body>
+
+</html>

@@ -9,384 +9,319 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="hero.css">
     <!-- MapLibre GL JS for 3D Satellite Map -->
     <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
     <link href="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.css" rel="stylesheet" />
 </head>
 
-<body>
-    <!-- Ornamental Frame (Cadre de peinture) -->
-    <div class="site-frame">
-        <div class="site-frame__line site-frame__line--t"></div>
-        <div class="site-frame__line site-frame__line--b"></div>
-        <div class="site-frame__line site-frame__line--l"></div>
-        <div class="site-frame__line site-frame__line--r"></div>
-        <div class="site-frame__corner site-frame__corner--tl"></div>
-        <div class="site-frame__corner site-frame__corner--tr"></div>
-        <div class="site-frame__corner site-frame__corner--bl"></div>
-        <div class="site-frame__corner site-frame__corner--br"></div>
-    </div>
+<!-- Custom cursor viewfinder -->
+<div class="cursor" id="cursor"></div>
 
-    <!-- Custom cursor viewfinder -->
-    <div class="cursor" id="cursor"></div>
+<!-- ========================================================================== -->
+<!-- HEADER SECTION -->
+<!-- ========================================================================== -->
 
-    <!-- Background Particles -->
-    <canvas id="particles-canvas" class="hero__particles"></canvas>
+<!-- Navbar -->
+<header class="header">
+    <div class="header__inner">
+        <button class="header__menu-btn" id="menu-btn" aria-label="Ouvrir le menu">
+            <span class="header__menu-icon">
+                <span class="header__menu-line header__menu-line--1"></span>
+                <span class="header__menu-line header__menu-line--2"></span>
+                <span class="header__menu-line header__menu-line--3"></span>
+            </span>
+            <span class="header__menu-text">MENU</span>
+        </button>
 
-    <!-- Film Grain Canvas -->
-    <canvas id="grain-canvas" class="film-grain"></canvas>
-
-    <!-- Canvas for WebGL Liquid Reveal -->
-    <canvas id="webgl-canvas" class="video-bg"></canvas>
-
-    <!-- Fallback & source video element -->
-    <video id="bg-video" src="assets/video/LHERAUD_HEADER SITE_VFFF.mp4" autoplay loop muted playsinline
-        class="video-bg"></video>
-
-    <!-- Navbar -->
-    <header class="header">
-        <div class="header__inner">
-            <button class="header__menu-btn" id="menu-btn" aria-label="Ouvrir le menu">
-                <span class="header__menu-icon">
-                    <span class="header__menu-line header__menu-line--1"></span>
-                    <span class="header__menu-line header__menu-line--2"></span>
-                    <span class="header__menu-line header__menu-line--3"></span>
-                </span>
-                <span class="header__menu-text">MENU</span>
-            </button>
-
-            <div class="header__logo-container">
-                <a href="#" class="header__logo-link">
-                    <img src="assets/image/lheraud-groupe.png" alt="Maison Lhéraud" class="header__logo">
-                </a>
-            </div>
-
-            <div class="header__action-container">
-                <a href="#" class="header__action-btn btn btn--framed">ACCÈS PROFESSIONNELS</a>
-            </div>
+        <div class="header__logo-container">
+            <a href="#" class="header__logo-link">
+                <img src="assets/image/lheraud-groupe.png" alt="Maison Lhéraud" class="header__logo">
+            </a>
         </div>
-    </header>
 
-
-    <!-- Vertical Timeline -->
-    <aside class="vertical-timeline">
-        <div class="timeline__line"></div>
-        <div class="timeline__item">
-            <span class="timeline__label">LE DOMAINE</span>
-            <div class="timeline__marker"></div>
-        </div>
-        <div class="timeline__item">
-            <span class="timeline__label">LE CHAI</span>
-            <div class="timeline__marker"></div>
-        </div>
-        <div class="timeline__item">
-            <span class="timeline__label">L'HÉRITAGE</span>
-            <div class="timeline__marker"></div>
-        </div>
-    </aside>
-    <main id="scroll-container">
-        <!-- Hero Section -->
-        <section id="hero" class="hero">
-            <div class="hero__content">
-                <span class="hero__welcome hero__welcome--white">BIENVENUE</span>
-                <h1 class="hero__title">
-                    <span class="hero__title-line hero__title-line--light hero__title-line--white">Dans l'univers</span>
-                    <span class="hero__title-line hero__title-line--creme"><span class="hero__title-line--light">de la
-                            maison </span>Lhéraud</span>
-                </h1>
-                <p class="hero__subtitle hero__subtitle--white">PRÉSENT DEPUIS 1680</p>
-                <div class="hero__divider"></div>
-                <a href="#collections" class="hero__cta btn btn--underline">DÉCOUVRIR L'HISTOIRE</a>
-            </div>
-
-            <div class="hero__footer">
-                <div class="hero__coords">
-                    <button class="hero__coords-btn" id="coords-btn"
-                        aria-label="Afficher la carte du domaine">45.613047, -0.075329</button>
-                </div>
-                <div class="hero__socials">
-                    <a href="#" class="hero__social-link">FACEBOOK</a>
-                    <span class="hero__social-separator">-</span>
-                    <a href="#" class="hero__social-link">INSTAGRAM</a>
-                    <span class="hero__social-separator">-</span>
-                    <a href="#" class="hero__social-link">LINKEDIN</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Collections Section -->
-        <section id="collections" class="collections">
-            <div class="collections__header">
-                <h2 class="collections__title">Les Collections Lhéraud</h2>
-                <div class="collections__line"></div>
-            </div>
-
-            <div class="collections__grid">
-                <!-- Cognac -->
-                <div class="collection-card" data-parallax="0.1">
-                    <div class="collection-card__image-wrap">
-                        <img src="assets/image/collections/COGNAC-LHERAUD.png" alt="Lhéraud Cognac"
-                            class="collection-card__image">
-                    </div>
-                    <div class="collection-card__content">
-                        <span class="collection-card__category">Cognac</span>
-                        <h3 class="collection-card__name">Lhéraud <br>Cognac</h3>
-                        <a href="#" class="collection-card__link">Découvrir la collection</a>
-                    </div>
-                </div>
-
-                <!-- Pineau -->
-                <div class="collection-card" data-parallax="0.15">
-                    <div class="collection-card__image-wrap">
-                        <img src="assets/image/collections/PineauF1er-lheraud.png" alt="Pineau François 1er"
-                            class="collection-card__image">
-                    </div>
-                    <div class="collection-card__content">
-                        <span class="collection-card__category">Pineau des Charentes</span>
-                        <h3 class="collection-card__name">Pineau <br>François 1<sup>er</sup></h3>
-                        <a href="#" class="collection-card__link">Découvrir la collection</a>
-                    </div>
-                </div>
-
-                <!-- Armagnac -->
-                <div class="collection-card" data-parallax="0.05">
-                    <div class="collection-card__image-wrap">
-                        <img src="assets/image/collections/armagnac-lheraud.png" alt="Armagnac Gaston Legrand"
-                            class="collection-card__image">
-                    </div>
-                    <div class="collection-card__content">
-                        <span class="collection-card__category">Armagnac</span>
-                        <h3 class="collection-card__name">Baron <br>Gaston Legrand</h3>
-                        <a href="#" class="collection-card__link">Découvrir la collection</a>
-                    </div>
-                </div>
-
-                <!-- Whisky -->
-                <div class="collection-card" data-parallax="0.12">
-                    <div class="collection-card__image-wrap">
-                        <img src="assets/image/collections/Lasdoux-Whisky.png" alt="Lasdoux Whisky"
-                            class="collection-card__image">
-                    </div>
-                    <div class="collection-card__content">
-                        <span class="collection-card__category">Whisky</span>
-                        <h3 class="collection-card__name">Lasdoux <br>Whisky</h3>
-                        <a href="#" class="collection-card__link">Découvrir la collection</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <!-- ==================== HERITAGE GALLERY (STACK REVEAL) ==================== -->
-        <section id="heritage-gallery" class="heritage-gallery">
-            <div class="gallery__scroll-track">
-                <!-- Cinematic Black Curtain Reveal -->
-                <div class="gallery__curtain">
-                    <div class="curtain__panel curtain__panel--top"></div>
-                    <div class="curtain__panel curtain__panel--bottom"></div>
-                </div>
-
-                <div class="gallery__pin-container">
-                    <div class="gallery__stack">
-                        <!-- Slide 1: Cognac -->
-                        <div class="gallery__slide" data-index="0">
-                            <div class="gallery__slide-content">
-                                <img src="assets/image/collections/LHERAUD_COGNAC_BEIGE.png" alt="Logo"
-                                    class="gallery__slide-logo">
-                                <div class="gallery__slide-image-wrap">
-                                    <img src="assets/image/collections/COGNAC-LHERAUD.png" alt="Product"
-                                        class="gallery__slide-img">
-                                </div>
-                                <div class="gallery__slide-footer">
-                                    <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Slide 2: Pineau -->
-                        <div class="gallery__slide" data-index="1">
-                            <div class="gallery__slide-content">
-                                <img src="assets/image/collections/PINEAU_FRANCOIS_1ER_beige.png" alt="Logo"
-                                    class="gallery__slide-logo">
-                                <div class="gallery__slide-image-wrap">
-                                    <img src="assets/image/collections/PineauF1er-lheraud.png" alt="Product"
-                                        class="gallery__slide-img">
-                                </div>
-                                <div class="gallery__slide-footer">
-                                    <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Slide 3: Armagnac -->
-                        <div class="gallery__slide" data-index="2">
-                            <div class="gallery__slide-content">
-                                <img src="assets/image/collections/BARON_GASTON_LEGRAND_beige.png" alt="Logo"
-                                    class="gallery__slide-logo">
-                                <div class="gallery__slide-image-wrap">
-                                    <img src="assets/image/collections/armagnac-lheraud.png" alt="Product"
-                                        class="gallery__slide-img">
-                                </div>
-                                <div class="gallery__slide-footer">
-                                    <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Slide 4: Whisky -->
-                        <div class="gallery__slide" data-index="3">
-                            <div class="gallery__slide-content">
-                                <img src="assets/image/collections/LASDOUX_WHISKY_4.png" alt="Logo"
-                                    class="gallery__slide-logo">
-                                <div class="gallery__slide-image-wrap">
-                                    <img src="assets/image/collections/Lasdoux-Whisky.png" alt="Product"
-                                        class="gallery__slide-img">
-                                </div>
-                                <div class="gallery__slide-footer">
-                                    <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-        </section>
-    </main>
-
-    <!-- Menu Overlay -->
-    <div class="menu-overlay" id="menu-overlay">
-        <div class="menu-overlay__veil"></div>
-        <div class="menu-overlay__inner">
-            <nav class="menu-overlay__nav">
-                <ul class="menu-overlay__list">
-                    <li class="menu-overlay__item">
-                        <a href="#hero" class="menu-overlay__link" data-text="Accueil">Accueil</a>
-                    </li>
-                    <li class="menu-overlay__item menu-overlay__item--has-submenu">
-                        <button class="menu-overlay__link menu-overlay__link--trigger" aria-expanded="false">
-                            <span>Nos marques</span>
-                            <span class="menu-overlay__trigger-icon"></span>
-                        </button>
-                        <ul class="menu-overlay__submenu">
-                            <li class="menu-overlay__submenu-item">
-                                <a href="#collections" class="menu-overlay__submenu-link">Cognac</a>
-                            </li>
-                            <li class="menu-overlay__submenu-item">
-                                <a href="#collections" class="menu-overlay__submenu-link">Pineau des Charentes</a>
-                            </li>
-                            <li class="menu-overlay__submenu-item">
-                                <a href="#collections" class="menu-overlay__submenu-link">Armagnac</a>
-                            </li>
-                            <li class="menu-overlay__submenu-item">
-                                <a href="#collections" class="menu-overlay__submenu-link">Whisky</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="menu-overlay__item">
-                        <a href="#collections" class="menu-overlay__link" data-text="Blog">Blog</a>
-                    </li>
-                    <li class="menu-overlay__item">
-                        <a href="#heritage-gallery" class="menu-overlay__link" data-text="Contact">Contact</a>
-                    </li>
-                </ul>
-            </nav>
-
-            <div class="menu-overlay__right">
-                <img src="assets/image/lheraud-groupe.png" alt="Maison Lhéraud" class="menu-overlay__seal">
-                <div class="menu-overlay__info">
-                    <p class="menu-overlay__info-title">MAISON LHÉRAUD</p>
-                    <p class="menu-overlay__info-text">Depuis 1680, l'excellence des spiritueux d'exception.</p>
-                    <p class="menu-overlay__info-coords">45.613047, -0.075329</p>
-                </div>
-            </div>
+        <div class="header__action-container">
+            <a href="#" class="header__action-btn btn btn--framed">ACCÈS PROFESSIONNELS</a>
         </div>
     </div>
+</header>
 
-    <!-- Map Overlay -->
-    <div class="map-overlay" id="map-overlay">
-        <div class="map-overlay__veil"></div>
 
-        <header class="map-overlay__header">
-            <h2 class="map-overlay__title">DOMAINE LHÉRAUD</h2>
-            <button class="map-overlay__close-btn" id="map-close-btn" aria-label="Fermer la carte">
-                <span class="map-overlay__close-text">FERMER</span>
-                <span class="map-overlay__close-icon"></span>
-            </button>
-        </header>
+<!-- Vertical Timeline -->
+<aside class="vertical-timeline">
+    <div class="timeline__line"></div>
+    <div class="timeline__item">
+        <span class="timeline__label">LE DOMAINE</span>
+        <div class="timeline__marker"></div>
+    </div>
+    <div class="timeline__item">
+        <span class="timeline__label">LE CHAI</span>
+        <div class="timeline__marker"></div>
+    </div>
+    <div class="timeline__item">
+        <span class="timeline__label">L'HÉRITAGE</span>
+        <div class="timeline__marker"></div>
+    </div>
+</aside>
+<main id="scroll-container">
 
-        <div class="map-overlay__canvas">
-            <!-- 3D Satellite Map Canvas -->
-            <div id="map-3d-canvas" style="width: 100%; height: 100%;"></div>
+    <!-- ========================================================================== -->
+    <!-- HERO SECTION -->
+    <!-- ========================================================================== -->
+    <section id="hero" class="hero">
+        <!-- Background Particles -->
+        <canvas id="particles-canvas" class="hero__particles"></canvas>
+
+        <!-- Film Grain Canvas -->
+        <canvas id="grain-canvas" class="film-grain"></canvas>
+
+        <!-- Canvas for WebGL Liquid Reveal -->
+        <canvas id="webgl-canvas" class="video-bg"></canvas>
+
+        <!-- Fallback & source video element -->
+        <video id="bg-video" src="assets/video/LHERAUD_HEADER SITE_VFFF.mp4" autoplay loop muted playsinline
+            class="video-bg"></video>
+
+        <!-- Ornamental Frame (Cadre de peinture) -->
+        <div class="site-frame">
+            <div class="site-frame__line site-frame__line--t"></div>
+            <div class="site-frame__line site-frame__line--b"></div>
+            <div class="site-frame__line site-frame__line--l"></div>
+            <div class="site-frame__line site-frame__line--r"></div>
+            <div class="site-frame__corner site-frame__corner--tl"></div>
+            <div class="site-frame__corner site-frame__corner--tr"></div>
+            <div class="site-frame__corner site-frame__corner--bl"></div>
+            <div class="site-frame__corner site-frame__corner--br"></div>
+        </div>
+        <div class="hero__content">
+            <span class="hero__welcome hero__welcome--white">BIENVENUE</span>
+            <h1 class="hero__title">
+                <span class="hero__title-line hero__title-line--light hero__title-line--white">Dans l'univers</span>
+                <span class="hero__title-line hero__title-line--creme"><span class="hero__title-line--light">de la
+                        maison </span>Lhéraud</span>
+            </h1>
+            <p class="hero__subtitle hero__subtitle--white">PRÉSENT DEPUIS 1680</p>
+            <div class="hero__divider"></div>
+            <a href="#collections" class="hero__cta btn btn--underline">DÉCOUVRIR L'HISTOIRE</a>
         </div>
 
-        <!-- Compass Widget -->
-        <div class="map-overlay__compass">
-            <svg class="map-overlay__compass-svg" viewBox="0 0 100 100">
-                <!-- Outer Luxury Rings and Bezel graduations -->
-                <circle cx="50" cy="50" r="46" stroke="var(--color-gold)" stroke-width="1.2" fill="none" opacity="0.8" />
-                <circle cx="50" cy="50" r="41" stroke="var(--color-gold)" stroke-width="1.5" stroke-dasharray="1 3" fill="none" opacity="0.45" />
-                <circle cx="50" cy="50" r="36" stroke="var(--color-creme)" stroke-width="0.5" stroke-opacity="0.2" fill="none" />
-                
-                <!-- Cardinal Cardinal Cross ticks -->
-                <line x1="50" y1="12" x2="50" y2="18" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
-                <line x1="50" y1="82" x2="50" y2="88" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
-                <line x1="12" y1="50" x2="18" y2="50" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
-                <line x1="82" y1="50" x2="88" y2="50" stroke="var(--color-gold)" stroke-width="0.8" opacity="0.5" />
-                
-                <!-- Bevelled 3D metallic North Needle -->
-                <path d="M 50,14 L 47,46 L 50,49 Z" fill="var(--color-creme)" opacity="0.65" />
-                <path d="M 50,14 L 53,46 L 50,49 Z" fill="var(--color-white)" />
-                
-                <!-- Bevelled 3D metallic South Needle -->
-                <path d="M 50,86 L 47,54 L 50,51 Z" fill="var(--color-gold)" opacity="0.45" />
-                <path d="M 50,86 L 53,54 L 50,51 Z" fill="var(--color-gold)" opacity="0.8" />
-                
-                <!-- Center Gold Pivot -->
-                <circle cx="50" cy="50" r="4" fill="var(--color-gold)" />
-                <circle cx="50" cy="50" r="1.5" fill="var(--color-white)" />
-                
-                <!-- Labels -->
-                <text x="50" y="9" fill="var(--color-white)" font-size="7.5" font-family="var(--font-sans)" font-weight="bold" text-anchor="middle">N</text>
-                <text x="50" y="97" fill="var(--color-gold)" font-size="6.5" font-family="var(--font-sans)" font-weight="600" text-anchor="middle" opacity="0.8">S</text>
-                <text x="7" y="52.5" fill="var(--color-gold)" font-size="6.5" font-family="var(--font-sans)" font-weight="600" text-anchor="middle" opacity="0.8">O</text>
-                <text x="93" y="52.5" fill="var(--color-gold)" font-size="6.5" font-family="var(--font-sans)" font-weight="600" text-anchor="middle" opacity="0.8">E</text>
-            </svg>
+        <div class="hero__footer">
+            <div class="hero__coords">
+                <a href="map.html" class="hero__coords-btn" id="coords-btn"
+                    aria-label="Afficher la carte du domaine">45.613047, -0.075329</a>
+            </div>
+            <div class="hero__socials">
+                <a href="#" class="hero__social-link">FACEBOOK</a>
+                <span class="hero__social-separator">-</span>
+                <a href="#" class="hero__social-link">INSTAGRAM</a>
+                <span class="hero__social-separator">-</span>
+                <a href="#" class="hero__social-link">LINKEDIN</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========================================================================== -->
+    <!-- COLLECTIONS SECTION -->
+    <!-- ========================================================================== -->
+    <section id="collections" class="collections">
+        <div class="collections__header">
+            <h2 class="collections__title">Les Collections Lhéraud</h2>
+            <div class="collections__line"></div>
         </div>
 
-        <!-- Carousel and Stats Footer -->
-        <div class="map-overlay__footer">
-            <div class="map-overlay__carousel">
-                <button class="map-overlay__carousel-btn map-overlay__carousel-btn--prev" id="map-prev-btn"
-                    aria-label="Précédent">
-                    <svg viewBox="0 0 100 100" class="map-overlay__carousel-arrow">
-                        <path d="M 60,30 L 40,50 L 60,70" stroke="currentColor" stroke-width="6" fill="none"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </button>
-                <div class="map-overlay__carousel-info">
-                    <span class="map-overlay__carousel-counter"><span id="map-current-num">1</span>/5</span>
-                    <h3 class="map-overlay__carousel-title" id="map-current-title">Les Vignobles</h3>
+        <div class="collections__grid">
+            <!-- Cognac -->
+            <div class="collection-card" data-parallax="0.1">
+                <div class="collection-card__image-wrap">
+                    <img src="assets/image/collections/COGNAC-LHERAUD.png" alt="Lhéraud Cognac"
+                        class="collection-card__image">
                 </div>
-                <button class="map-overlay__carousel-btn map-overlay__carousel-btn--next" id="map-next-btn"
-                    aria-label="Suivant">
-                    <svg viewBox="0 0 100 100" class="map-overlay__carousel-arrow">
-                        <path d="M 40,30 L 60,50 L 40,70" stroke="currentColor" stroke-width="6" fill="none"
-                            stroke-linecap="round" stroke-linejoin="round" />
-                    </svg>
-                </button>
+                <div class="collection-card__content">
+                    <span class="collection-card__category">Cognac</span>
+                    <h3 class="collection-card__name">Lhéraud <br>Cognac</h3>
+                    <a href="#" class="collection-card__link">Découvrir la collection</a>
+                </div>
             </div>
 
-            <div class="map-overlay__stats">
-                <div class="map-overlay__stat-item">
-                    <span class="map-overlay__stat-label">COORDONNÉES</span>
-                    <span class="map-overlay__stat-value" id="map-stat-coords">45.614500, -0.078500</span>
+            <!-- Pineau -->
+            <div class="collection-card" data-parallax="0.15">
+                <div class="collection-card__image-wrap">
+                    <img src="assets/image/collections/PineauF1er-lheraud.png" alt="Pineau François 1er"
+                        class="collection-card__image">
                 </div>
+                <div class="collection-card__content">
+                    <span class="collection-card__category">Pineau des Charentes</span>
+                    <h3 class="collection-card__name">Pineau <br>François 1<sup>er</sup></h3>
+                    <a href="#" class="collection-card__link">Découvrir la collection</a>
+                </div>
+            </div>
+
+            <!-- Armagnac -->
+            <div class="collection-card" data-parallax="0.05">
+                <div class="collection-card__image-wrap">
+                    <img src="assets/image/collections/armagnac-lheraud.png" alt="Armagnac Gaston Legrand"
+                        class="collection-card__image">
+                </div>
+                <div class="collection-card__content">
+                    <span class="collection-card__category">Armagnac</span>
+                    <h3 class="collection-card__name">Baron <br>Gaston Legrand</h3>
+                    <a href="#" class="collection-card__link">Découvrir la collection</a>
+                </div>
+            </div>
+
+            <!-- Whisky -->
+            <div class="collection-card" data-parallax="0.12">
+                <div class="collection-card__image-wrap">
+                    <img src="assets/image/collections/Lasdoux-Whisky.png" alt="Lasdoux Whisky"
+                        class="collection-card__image">
+                </div>
+                <div class="collection-card__content">
+                    <span class="collection-card__category">Whisky</span>
+                    <h3 class="collection-card__name">Lasdoux <br>Whisky</h3>
+                    <a href="#" class="collection-card__link">Découvrir la collection</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ========================================================================== -->
+    <!-- HERITAGE GALLERY SECTION (STACK REVEAL) -->
+    <!-- ========================================================================== -->
+    <section id="heritage-gallery" class="heritage-gallery">
+        <div class="gallery__scroll-track">
+            <!-- Cinematic Black Curtain Reveal -->
+            <div class="gallery__curtain">
+                <div class="curtain__panel curtain__panel--top"></div>
+                <div class="curtain__panel curtain__panel--bottom"></div>
+            </div>
+
+            <div class="gallery__pin-container">
+                <div class="gallery__stack">
+                    <!-- Slide 1: Cognac -->
+                    <div class="gallery__slide" data-index="0">
+                        <div class="gallery__slide-content">
+                            <img src="assets/image/collections/LHERAUD_COGNAC_BEIGE.png" alt="Logo"
+                                class="gallery__slide-logo">
+                            <div class="gallery__slide-image-wrap">
+                                <img src="assets/image/collections/COGNAC-LHERAUD.png" alt="Product"
+                                    class="gallery__slide-img">
+                            </div>
+                            <div class="gallery__slide-footer">
+                                <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2: Pineau -->
+                    <div class="gallery__slide" data-index="1">
+                        <div class="gallery__slide-content">
+                            <img src="assets/image/collections/PINEAU_FRANCOIS_1ER_beige.png" alt="Logo"
+                                class="gallery__slide-logo">
+                            <div class="gallery__slide-image-wrap">
+                                <img src="assets/image/collections/PineauF1er-lheraud.png" alt="Product"
+                                    class="gallery__slide-img">
+                            </div>
+                            <div class="gallery__slide-footer">
+                                <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3: Armagnac -->
+                    <div class="gallery__slide" data-index="2">
+                        <div class="gallery__slide-content">
+                            <img src="assets/image/collections/BARON_GASTON_LEGRAND_beige.png" alt="Logo"
+                                class="gallery__slide-logo">
+                            <div class="gallery__slide-image-wrap">
+                                <img src="assets/image/collections/armagnac-lheraud.png" alt="Product"
+                                    class="gallery__slide-img">
+                            </div>
+                            <div class="gallery__slide-footer">
+                                <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4: Whisky -->
+                    <div class="gallery__slide" data-index="3">
+                        <div class="gallery__slide-content">
+                            <img src="assets/image/collections/LASDOUX_WHISKY_4.png" alt="Logo"
+                                class="gallery__slide-logo">
+                            <div class="gallery__slide-image-wrap">
+                                <img src="assets/image/collections/Lasdoux-Whisky.png" alt="Product"
+                                    class="gallery__slide-img">
+                            </div>
+                            <div class="gallery__slide-footer">
+                                <a href="#" class="gallery__btn">DÉCOUVRIR LA COLLECTION</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+</main>
+
+<!-- ========================================================================== -->
+<!-- MENU OVERLAY SECTION -->
+<!-- ========================================================================== -->
+<div class="menu-overlay" id="menu-overlay">
+    <div class="menu-overlay__veil"></div>
+    <div class="menu-overlay__inner">
+        <nav class="menu-overlay__nav">
+            <ul class="menu-overlay__list">
+                <li class="menu-overlay__item">
+                    <a href="#hero" class="menu-overlay__link" data-text="Accueil">Accueil</a>
+                </li>
+                <li class="menu-overlay__item menu-overlay__item--has-submenu">
+                    <button class="menu-overlay__link menu-overlay__link--trigger" aria-expanded="false">
+                        <span>Nos marques</span>
+                        <span class="menu-overlay__trigger-icon"></span>
+                    </button>
+                    <ul class="menu-overlay__submenu">
+                        <li class="menu-overlay__submenu-item">
+                            <a href="#collections" class="menu-overlay__submenu-link">Cognac</a>
+                        </li>
+                        <li class="menu-overlay__submenu-item">
+                            <a href="#collections" class="menu-overlay__submenu-link">Pineau des Charentes</a>
+                        </li>
+                        <li class="menu-overlay__submenu-item">
+                            <a href="#collections" class="menu-overlay__submenu-link">Armagnac</a>
+                        </li>
+                        <li class="menu-overlay__submenu-item">
+                            <a href="#collections" class="menu-overlay__submenu-link">Whisky</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="menu-overlay__item">
+                    <a href="#collections" class="menu-overlay__link" data-text="Blog">Blog</a>
+                </li>
+                <li class="menu-overlay__item">
+                    <a href="#heritage-gallery" class="menu-overlay__link" data-text="Contact">Contact</a>
+                </li>
+                <li class="menu-overlay__item menu-overlay__item--mobile-only">
+                    <a href="#" class="header__action-btn btn btn--framed">ACCÈS PROFESSIONNELS</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="menu-overlay__right">
+            <img src="assets/image/lheraud-groupe.png" alt="Maison Lhéraud" class="menu-overlay__seal">
+            <div class="menu-overlay__info">
+                <p class="menu-overlay__info-title">MAISON LHÉRAUD</p>
+                <p class="menu-overlay__info-text">Depuis 1680, l'excellence des spiritueux d'exception.</p>
+                <p class="menu-overlay__info-coords">45.613047, -0.075329</p>
             </div>
         </div>
     </div>
+</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="menu.js"></script>
+<script src="hero.js"></script>
+<script src="script.js"></script>
 </body>
 
 </html>
