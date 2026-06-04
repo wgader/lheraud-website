@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 1024;
     const cursor = document.getElementById('cursor');
+    const videoEl = document.getElementById('bg-video');
 
     // ─── Signature Mask Path Length Dynamic Calculation ───────────
     const maskPath = document.getElementById('mask-path');
@@ -10,31 +11,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const WRITE_SPEED = 750; // pixels per second — uniform across all paths
     const BASE_DELAY = 0.8;  // seconds before first stroke begins
 
-    if (maskPath) {
-        const mainLength = maskPath.getTotalLength();
-        maskPath.style.strokeDasharray = mainLength;
-        maskPath.style.strokeDashoffset = mainLength;
-        const mainDuration = mainLength / WRITE_SPEED;
-        maskPath.style.animation = 'writeHand ' + mainDuration.toFixed(2) + 's linear ' + BASE_DELAY + 's forwards';
+    const startSignatureAnimation = () => {
+        if (maskPath) {
+            const mainLength = maskPath.getTotalLength();
+            maskPath.style.strokeDasharray = mainLength;
+            maskPath.style.strokeDashoffset = mainLength;
+            const mainDuration = mainLength / WRITE_SPEED;
+            maskPath.style.animation = 'writeHand ' + mainDuration.toFixed(2) + 's linear ' + BASE_DELAY + 's forwards';
 
-        // Chain the d-stem animation to start right when the main path ends
-        if (maskStem) {
-            const stemLength = maskStem.getTotalLength();
-            maskStem.style.strokeDasharray = stemLength;
-            maskStem.style.strokeDashoffset = stemLength;
-            const stemDuration = stemLength / WRITE_SPEED;
-            const stemDelay = BASE_DELAY + mainDuration;
-            maskStem.style.animation = 'writeHand ' + stemDuration.toFixed(2) + 's linear ' + stemDelay.toFixed(2) + 's forwards';
-        }
+            // Chain the d-stem animation to start right when the main path ends
+            if (maskStem) {
+                const stemLength = maskStem.getTotalLength();
+                maskStem.style.strokeDasharray = stemLength;
+                maskStem.style.strokeDashoffset = stemLength;
+                const stemDuration = stemLength / WRITE_SPEED;
+                const stemDelay = BASE_DELAY + mainDuration;
+                maskStem.style.animation = 'writeHand ' + stemDuration.toFixed(2) + 's linear ' + stemDelay.toFixed(2) + 's forwards';
+            }
 
-        // Accent appears at ~50% of main path (during é writing, not at the end)
-        if (accentPath) {
-            const accentLength = accentPath.getTotalLength();
-            accentPath.style.strokeDasharray = accentLength;
-            accentPath.style.strokeDashoffset = accentLength;
-            const accentDelay = BASE_DELAY + mainDuration * 0.50;
-            accentPath.style.animation = 'writeAccent 0.35s cubic-bezier(0.25, 1, 0.5, 1) ' + accentDelay.toFixed(2) + 's forwards';
+            // Accent appears at ~50% of main path (during é writing, not at the end)
+            if (accentPath) {
+                const accentLength = accentPath.getTotalLength();
+                accentPath.style.strokeDasharray = accentLength;
+                accentPath.style.strokeDashoffset = accentLength;
+                const accentDelay = BASE_DELAY + mainDuration * 0.50;
+                accentPath.style.animation = 'writeAccent 0.35s cubic-bezier(0.25, 1, 0.5, 1) ' + accentDelay.toFixed(2) + 's forwards';
+            }
         }
+    };
+
+    // Delay the signature animation until the video actually starts playing
+    if (videoEl) {
+        if (!videoEl.paused && videoEl.currentTime > 0) {
+            startSignatureAnimation();
+        } else {
+            videoEl.addEventListener('playing', startSignatureAnimation, { once: true });
+        }
+    } else {
+        startSignatureAnimation();
     }
 
     // ─── Mouse ─────────────────────────────────────────────────────
@@ -43,15 +57,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let cw = 280, ch = 160;
 
     // ─── Reveal state ──────────────────────────────────────────────
-    let revealState = isMobile ? 'open' : 'idle';
-    let revealProgress = isMobile ? 1 : 0;
+    let revealState = 'idle';
+    let revealProgress = 0;
     let revealAnchorX = 0;
     let revealAnchorY = 0;
     let revealInitHalfW = 0;
-
-    if (isMobile) {
-        document.body.classList.add('is-revealed');
-    }
 
     const OPEN_SPEED = 0.02;
 
@@ -66,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ─── WebGL Setup for Fluid Distortion ──────────────────────────
     const canvasWebGL = document.getElementById('webgl-canvas');
-    const videoEl = document.getElementById('bg-video');
     let gl = null;
     let webglActive = false;
 
@@ -95,17 +104,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (canvasWebGL && videoEl) {
         gl = canvasWebGL.getContext('webgl') || canvasWebGL.getContext('experimental-webgl');
-        if (gl && !isMobile) {
+        if (gl) {
             webglActive = true;
             gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
-            // Hide fallback video off-screen so browser continues decoding it
-            videoEl.style.position = 'fixed';
-            videoEl.style.top = '-1000px';
-            videoEl.style.left = '-1000px';
-            videoEl.style.width = '320px';
-            videoEl.style.height = '180px';
-            videoEl.style.opacity = '0.01';
+            // Keep video in place but make it invisible and pointer-events none
+            // This ensures iOS Safari treats it as onscreen and autoplays it
+            videoEl.style.position = 'absolute';
+            videoEl.style.top = '0';
+            videoEl.style.left = '0';
+            videoEl.style.width = '100%';
+            videoEl.style.height = '100%';
+            videoEl.style.opacity = '0.0001';
             videoEl.style.pointerEvents = 'none';
 
             // Shared Vertex Shader
@@ -705,6 +715,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) {
+            const touch = e.touches[0];
+            mouseX = touch.clientX;
+            mouseY = touch.clientY;
+            if (cursor && cursor.style.opacity !== '1') {
+                cursor.style.opacity = '1';
+            }
+        }
+    });
+
     document.addEventListener('touchmove', (e) => {
         if (e.touches.length > 0) {
             const touch = e.touches[0];
@@ -737,7 +758,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.addEventListener('click', (e) => {
-        if (isMobile) return; // Disable reveal toggle on mobile
         if (e.target.closest('a')) return;
         if (window.scrollY > 300) return;
 
