@@ -125,6 +125,7 @@ body.is-revealed .hero {
     font-size: 0.7rem;
     font-weight: 500;
     letter-spacing: 5px;
+    margin-top: 1.5rem;
     margin-bottom: 2rem;
     text-transform: uppercase;
 }
@@ -304,6 +305,7 @@ body.is-revealed .hero__footer {
     .hero__subtitle {
         font-size: 0.6rem;
         letter-spacing: 3px;
+        margin-top: 1rem;
         margin-bottom: 0.8rem;
     }
 

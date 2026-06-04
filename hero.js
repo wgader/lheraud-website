@@ -627,6 +627,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Setup video play handlers so it always autoplays and resumes, even on mobile
         const playVideo = () => {
             if (videoEl) {
+                videoEl.muted = true;
+                videoEl.defaultMuted = true;
                 videoEl.play().catch(e => console.log("Video play deferred:", e));
             }
         };
