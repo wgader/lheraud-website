@@ -1,6 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
     const cursor = document.getElementById('cursor');
 
+    // ─── Signature Mask Path Length Dynamic Calculation ───────────
+    const maskPath = document.getElementById('mask-path');
+    const maskStem = document.getElementById('mask-stem');
+    const accentPath = document.getElementById('accent-path');
+
+    const WRITE_SPEED = 750; // pixels per second — uniform across all paths
+    const BASE_DELAY = 0.8;  // seconds before first stroke begins
+
+    if (maskPath) {
+        const mainLength = maskPath.getTotalLength();
+        maskPath.style.strokeDasharray = mainLength;
+        maskPath.style.strokeDashoffset = mainLength;
+        const mainDuration = mainLength / WRITE_SPEED;
+        maskPath.style.animation = 'writeHand ' + mainDuration.toFixed(2) + 's linear ' + BASE_DELAY + 's forwards';
+
+        // Chain the d-stem animation to start right when the main path ends
+        if (maskStem) {
+            const stemLength = maskStem.getTotalLength();
+            maskStem.style.strokeDasharray = stemLength;
+            maskStem.style.strokeDashoffset = stemLength;
+            const stemDuration = stemLength / WRITE_SPEED;
+            const stemDelay = BASE_DELAY + mainDuration;
+            maskStem.style.animation = 'writeHand ' + stemDuration.toFixed(2) + 's linear ' + stemDelay.toFixed(2) + 's forwards';
+        }
+
+        // Accent appears at ~50% of main path (during é writing, not at the end)
+        if (accentPath) {
+            const accentLength = accentPath.getTotalLength();
+            accentPath.style.strokeDasharray = accentLength;
+            accentPath.style.strokeDashoffset = accentLength;
+            const accentDelay = BASE_DELAY + mainDuration * 0.50;
+            accentPath.style.animation = 'writeAccent 0.35s cubic-bezier(0.25, 1, 0.5, 1) ' + accentDelay.toFixed(2) + 's forwards';
+        }
+    }
+
     // ─── Mouse ─────────────────────────────────────────────────────
     let mouseX = -300, mouseY = -300;
     let cx = -300, cy = -300;
