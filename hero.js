@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const cursor = document.getElementById('cursor');
     const videoEl = document.getElementById('bg-video');
 
+    if (cursor) {
+        cursor.style.opacity = '1';
+    }
+
     // ─── Signature Mask Path Length Dynamic Calculation ───────────
     const maskPath = document.getElementById('mask-path');
     const maskStem = document.getElementById('mask-stem');
@@ -944,7 +948,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 cursor.style.borderRadius = '0%';
             }
         } else if (!webglActive && cursor) {
-            cursor.style.borderRadius = ((1 - revealProgress) * 50) + '%';
+            cursor.style.borderRadius = '50%';
         }
 
         if (cursor) {
@@ -953,18 +957,20 @@ document.addEventListener('DOMContentLoaded', () => {
             cursor.style.transform = `translate3d(${holeX - holeW / 2}px, ${holeY - holeH / 2}px, 0)`;
         }
 
-        const shouldHideCursor = isMobile || (window.scrollY > 300) || (revealState === 'open') || (revealState === 'opening');
+        const shouldHideCursor = (window.scrollY > 300) || (revealState === 'open') || (webglActive && revealState === 'opening');
         if (cursor) {
             if (shouldHideCursor) {
                 cursor.style.display = 'none';
-                document.body.style.cursor = 'auto';
                 if (!isMobile) {
+                    document.body.style.cursor = 'auto';
                     document.querySelectorAll('a, button, .timeline__item, .hero__coords-btn').forEach(el => el.style.cursor = 'pointer');
                 }
             } else {
                 cursor.style.display = 'flex';
-                document.body.style.cursor = 'none';
-                document.querySelectorAll('a, button, .timeline__item, .hero__coords-btn').forEach(el => el.style.cursor = 'none');
+                if (!isMobile) {
+                    document.body.style.cursor = 'none';
+                    document.querySelectorAll('a, button, .timeline__item, .hero__coords-btn').forEach(el => el.style.cursor = 'none');
+                }
             }
         }
 
