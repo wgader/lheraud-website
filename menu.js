@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeMenu() {
         isMenuOpen = false;
         menuBtn.classList.remove('header__menu-btn--open');
+        document.body.classList.remove('has-menu-open');
 
         // Restore body scroll if site is revealed
         if (document.body.classList.contains('is-revealed')) {
@@ -105,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isMenuOpen = true;
         menuBtn.classList.add('header__menu-btn--open');
         menuOverlay.classList.add('menu-overlay--open');
+        document.body.classList.add('has-menu-open');
 
         // Lock body scroll if site is already revealed
         if (document.body.classList.contains('is-revealed')) {

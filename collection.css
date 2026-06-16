@@ -1,0 +1,215 @@
+/* ==========================================================================
+   COLLECTIONS SECTION — LES COLLECTIONS LHÉRAUD
+   collection.css
+   ========================================================================== */
+
+/* ─── Section wrapper ─── */
+.collections {
+    position: relative;
+    background: var(--color-bg);
+    padding: clamp(3.5rem, 6vw, 5.5rem) clamp(1.5rem, 4vw, 4rem);
+}
+
+/* ─── Section header ─── */
+.collections__header {
+    text-align: center;
+    margin-bottom: clamp(2.5rem, 4vw, 4.5rem);
+}
+
+.collections__title {
+    font-family: var(--font-sans);
+    font-size: clamp(1.4rem, 2.2vw, 2.25rem);
+    font-weight: 600;
+    /* Trailing letter-spacing optical offset */
+    letter-spacing: clamp(6px, 0.9vw, 10px);
+    margin-right: -10px;
+    color: var(--color-gold);
+    text-transform: uppercase;
+    margin-bottom: 0;
+}
+
+/* ─── 2×2 Grid — gap trick for clean dividers ─── */
+.collections__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* gap fills with container background = divider lines */
+    gap: 1px;
+    background: rgba(219, 206, 188, 0.14);
+    /* outer frame */
+    border: 1px solid rgba(219, 206, 188, 0.14);
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* ─── Individual card ─── */
+.collection-card {
+    position: relative;
+    background: var(--color-bg);
+    padding: clamp(1.5rem, 3vw, 2.8rem) clamp(1.5rem, 3vw, 2.8rem) clamp(2rem, 3.5vw, 3.2rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.6s ease, box-shadow 0.5s ease;
+}
+
+.collection-card:hover {
+    background: rgba(11, 9, 17, 1);
+    box-shadow: inset 0 0 80px rgba(163, 140, 108, 0.04),
+        0 0 0 1px rgba(163, 140, 108, 0.2);
+}
+
+/* ─── Brand logo (top-left) ─── */
+.collection-card__logo {
+    position: absolute;
+    top: clamp(1.2rem, 2vw, 1.8rem);
+    left: clamp(1.2rem, 2vw, 1.8rem);
+    width: clamp(80px, 10vw, 150px);
+    height: auto;
+    max-height: 75px;
+    object-fit: contain;
+    opacity: 0.8;
+    transition: opacity 0.4s ease, filter 0.4s ease;
+    z-index: 2;
+}
+
+.collection-card:hover .collection-card__logo {
+    opacity: 1;
+    filter: drop-shadow(0 0 8px rgba(163, 140, 108, 0.35));
+}
+
+/* ─── Product visual ─── */
+.collection-card__visual {
+    position: relative;
+    /* Pour le halo radial ::after */
+    width: 100%;
+    height: clamp(230px, 26vw, 340px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: clamp(2.5rem, 4vw, 4rem);
+    margin-bottom: clamp(1rem, 2vw, 1.8rem);
+    z-index: 1;
+}
+
+/* ══ Lueur ambrée radiale qui s'épanouit derrière la bouteille au survol ══ */
+.collection-card__visual::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center,
+            rgba(163, 140, 108, 0.20) 0%,
+            rgba(163, 140, 108, 0.07) 45%,
+            transparent 72%);
+    transform: scale(0);
+    border-radius: 50%;
+    transition: transform 0.75s cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.collection-card:hover .collection-card__visual::after {
+    transform: scale(1.5);
+}
+
+.collection-card__img {
+    position: relative;
+    z-index: 1;
+    max-height: 100%;
+    max-width: 62%;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.6));
+    transition: transform 0.65s cubic-bezier(0.25, 1, 0.5, 1),
+        filter 0.65s ease;
+    will-change: transform;
+}
+
+.collection-card:hover .collection-card__img {
+    /* Soulèvement pur — pas de rotation */
+    transform: translateY(-14px) scale(1.025);
+    filter: drop-shadow(0 36px 60px rgba(0, 0, 0, 0.82))
+            drop-shadow(0 0 28px rgba(163, 140, 108, 0.13));
+}
+
+/* ─── Info block ─── */
+.collection-card__info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    gap: 0;
+}
+
+/* Category label */
+.collection-card__category {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: clamp(0.48rem, 0.6vw, 0.6rem);
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: var(--color-gold);
+    text-transform: uppercase;
+    opacity: 0.9;
+    margin-bottom: clamp(0.4rem, 0.7vw, 0.65rem);
+}
+
+/* Brand name */
+.collection-card__name {
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 1.7vw, 1.5rem);
+    font-weight: 700;
+    color: var(--color-creme);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    line-height: 1.2;
+    margin: 0 0 clamp(0.8rem, 1.4vw, 1.4rem);
+}
+
+/* CTA — reuses .btn .btn--framed but slightly smaller */
+.collection-card__btn.btn--framed {
+    font-size: 0.55rem;
+    padding: 0.72rem 1.75rem;
+    letter-spacing: 1.8px;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+/* ── 768px : 1 colonne sur tablette portrait / téléphone ── */
+@media (max-width: 768px) {
+    .collections__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .collection-card__visual {
+        height: clamp(200px, 45vw, 290px);
+    }
+
+    .collection-card__img {
+        max-width: 50%;
+    }
+}
+
+/* ── 480px : compact ── */
+@media (max-width: 480px) {
+    .collections {
+        padding: 3rem 1.25rem;
+    }
+
+    .collection-card__img {
+        max-width: 55%;
+    }
+
+    .collection-card__name {
+        font-size: clamp(0.9rem, 4.5vw, 1.25rem);
+    }
+
+    .collection-card__btn.btn--framed {
+        font-size: 0.5rem;
+        padding: 0.65rem 1.4rem;
+    }
+}

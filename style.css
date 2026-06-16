@@ -1,19 +1,75 @@
 @import url('assets/font/BROTHER 1816/stylesheet.css');
 
-/* Override mislabeled italic fonts in the imported stylesheet with true regular/medium/bold Brother 1816 files */
+/* ==================== TYPOGRAPHY SYSTEM (Font weight mappings 100-900) ==================== */
+
+/* Brother 1816 mappings */
 @font-face {
     font-family: 'Brother 1816';
-    src: url('assets/font/BROTHER 1816/Brother1816-Regular.woff2') format('woff2'),
-        url('assets/font/BROTHER 1816/Brother1816-Regular.woff') format('woff'),
-        url('assets/font/BROTHER 1816/Brother1816-Regular.ttf') format('truetype');
-    font-weight: normal;
+    src: url('assets/font/BROTHER 1816/Brother1816-Thin.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-Thin.ttf') format('truetype');
+    font-weight: 100;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-ThinItalic.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-ThinItalic.ttf') format('truetype');
+    font-weight: 100;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-Thin.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-Thin.ttf') format('truetype');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-ThinItalic.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-ThinItalic.ttf') format('truetype');
+    font-weight: 200;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-Light.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-LightItalic.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-Regular.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-Regulartalic.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-Regulartalic.ttf') format('truetype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
     src: url('assets/font/BROTHER 1816/Brother1816-Medium.woff2') format('woff2'),
-        url('assets/font/BROTHER 1816/Brother1816-Medium.woff') format('woff'),
         url('assets/font/BROTHER 1816/Brother1816-Medium.ttf') format('truetype');
     font-weight: 500;
     font-style: normal;
@@ -21,18 +77,103 @@
 
 @font-face {
     font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-MediumItalic.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-MediumItalic.ttf') format('truetype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-Medium.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-Medium.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-MediumItalic.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-MediumItalic.ttf') format('truetype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
     src: url('assets/font/BROTHER 1816/Brother1816-Bold.woff2') format('woff2'),
-        url('assets/font/BROTHER 1816/Brother1816-Bold.woff') format('woff'),
         url('assets/font/BROTHER 1816/Brother1816-Bold.ttf') format('truetype');
-    font-weight: bold;
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-BoldItalic.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-BoldItalic.ttf') format('truetype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-ExtraBold.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-ExtraBoldItalic.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-ExtraBoldItalic.ttf') format('truetype');
+    font-weight: 800;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-Black.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-Black.ttf') format('truetype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Brother 1816';
+    src: url('assets/font/BROTHER 1816/Brother1816-BlackItalic.woff2') format('woff2'),
+        url('assets/font/BROTHER 1816/Brother1816-BlackItalic.ttf') format('truetype');
+    font-weight: 900;
+    font-style: italic;
+}
+
+/* IvyPresto Display mappings */
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Thin.otf') format('opentype');
+    font-weight: 100;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'IvyPresto Display';
-    src: url('assets/font/Ivy Presto Display/IvyPresto Display Regular.otf') format('opentype');
-    font-weight: 400;
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Thin Italic.otf') format('opentype');
+    font-weight: 100;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Thin.otf') format('opentype');
+    font-weight: 200;
     font-style: normal;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Thin Italic.otf') format('opentype');
+    font-weight: 200;
+    font-style: italic;
 }
 
 @font-face {
@@ -44,15 +185,107 @@
 
 @font-face {
     font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Light Italic.otf') format('opentype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Italic.otf') format('opentype');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display SemiBold.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display SemiBold Italic.otf') format('opentype');
+    font-weight: 500;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display SemiBold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display SemiBold Italic.otf') format('opentype');
+    font-weight: 600;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
     src: url('assets/font/Ivy Presto Display/IvyPresto Display Bold.otf') format('opentype');
     font-weight: 700;
     font-style: normal;
 }
 
 @font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Bold Italic.otf') format('opentype');
+    font-weight: 700;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Bold.otf') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Bold Italic.otf') format('opentype');
+    font-weight: 800;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Bold.otf') format('opentype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'IvyPresto Display';
+    src: url('assets/font/Ivy Presto Display/IvyPresto Display Bold Italic.otf') format('opentype');
+    font-weight: 900;
+    font-style: italic;
+}
+
+/* Penumbra Flare mappings */
+@font-face {
     font-family: 'Penumbra Flare';
-    src: url('assets/font/Penumbra_Font_Family/Penumbra Flare Std Regular.otf') format('opentype');
-    font-weight: 400;
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Flare Std Light.otf') format('opentype');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Penumbra Flare';
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Flare Std Light.otf') format('opentype');
+    font-weight: 200;
     font-style: normal;
 }
 
@@ -65,8 +298,43 @@
 
 @font-face {
     font-family: 'Penumbra Flare';
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Flare Std Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Penumbra Flare';
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Flare Std Regular.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Penumbra Flare';
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Flare Std Regular.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Penumbra Flare';
     src: url('assets/font/Penumbra_Font_Family/Penumbra Flare Std Bold.otf') format('opentype');
     font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Penumbra Flare';
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Flare Std Bold.otf') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Penumbra Flare';
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Flare Std Bold.otf') format('opentype');
+    font-weight: 900;
     font-style: normal;
 }
 
@@ -153,6 +421,24 @@ a {
 
 body.is-revealed a {
     cursor: pointer;
+}
+
+body.has-menu-open,
+body.has-menu-open * {
+    cursor: auto !important;
+}
+
+body.has-menu-open a,
+body.has-menu-open button,
+body.has-menu-open [role="button"],
+body.has-menu-open .btn,
+body.has-menu-open a *,
+body.has-menu-open button * {
+    cursor: pointer !important;
+}
+
+body.has-menu-open #cursor {
+    display: none !important;
 }
 
 /* ==================== CURSOR ==================== */
@@ -264,24 +550,74 @@ body.is-revealed a {
     /* Prevent text wrapping */
 }
 
-.btn--framed::before,
+/* ─── Barres décoratives de base : crème, courtes, centrées (haut + bas) ─── */
+.btn--framed::before {
+    content: '';
+    position: absolute;
+    top: -3px; bottom: -3px; left: -1px; right: -1px;
+    background-image:
+        linear-gradient(var(--color-creme), var(--color-creme)),
+        linear-gradient(var(--color-creme), var(--color-creme));
+    background-position: top center, bottom center;
+    background-size: 40% 3px, 40% 3px;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 1;
+}
+
+/* Barres crème masquées pendant l'animation entrée ET sortie */
+.btn--framed.btn--entering::before,
+.btn--framed.btn--leaving::before { opacity: 0; }
+
+/* ─── Cadre animé blanc — 4 calques : haut | bas | gauche | droite ─── */
 .btn--framed::after {
     content: '';
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 45%;
-    height: 3px;
-    background-color: var(--color-creme);
-    transition: width 0.3s ease, background-color 0.3s ease;
+    top: -3px; bottom: -3px; left: -1px; right: -1px;
+    background-image:
+        linear-gradient(white, white),
+        linear-gradient(white, white),
+        linear-gradient(white, white),
+        linear-gradient(white, white);
+    background-position:
+        top center,   /* haut   : ancré au centre du bord supérieur  */
+        bottom center,/* bas    : ancré au centre du bord inférieur  */
+        left top,     /* gauche : démarre du coin haut-gauche         */
+        right top;    /* droite : démarre du coin haut-droit          */
+    background-size: 40% 3px, 40% 3px, 3px 0%, 3px 0%;
+    background-repeat: no-repeat;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
 }
 
-.btn--framed::before {
-    top: -2px;
+/* ─── Entrée : tracé progressif du rectangle (1.1 s) ───
+   Phase 1 (0→50%) : HAUT + BAS grandissent simultanément du centre vers les coins
+   Phase 2 (50→100%) : GAUCHE + DROITE descendent des coins hauts vers le bas */
+.btn--framed.btn--entering::after {
+    opacity: 1;
+    animation: btn-frame-trace 1.1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
-.btn--framed::after {
-    bottom: -2px;
+@keyframes btn-frame-trace {
+    0%   { background-size: 40%  3px, 40%  3px, 3px 0%,    3px 0%; }
+    50%  { background-size: 100% 3px, 100% 3px, 3px 0%,    3px 0%; }
+    100% { background-size: 100% 3px, 100% 3px, 3px 100%,  3px 100%; }
+}
+
+/* ─── Sortie : effacement dans l'ordre inverse (0.75 s) ───
+   Phase 1 (0→50%) : GAUCHE + DROITE remontent vers les coins hauts
+   Phase 2 (50→100%) : HAUT + BAS rétrécissent vers le centre */
+.btn--framed.btn--leaving::after {
+    opacity: 1;
+    animation: btn-frame-erase 0.75s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes btn-frame-erase {
+    0%   { opacity: 1; background-size: 100% 3px, 100% 3px, 3px 100%, 3px 100%; }
+    50%  { opacity: 1; background-size: 100% 3px, 100% 3px, 3px 0%,   3px 0%; }
+    100% { opacity: 0; background-size: 40%  3px, 40%  3px, 3px 0%,   3px 0%; }
 }
 
 .btn--framed:hover {
@@ -290,183 +626,9 @@ body.is-revealed a {
     box-shadow: 0 0 15px rgba(219, 206, 188, 0.15);
 }
 
-.btn--framed:hover::before,
-.btn--framed:hover::after {
-    background-color: var(--color-white);
-    width: 65%;
-}
-
 /* Header elements, menu overlay, and hero section styles moved to menu.css / hero.css */
 
-/* ==================== COLLECTIONS SECTION ==================== */
-.collections {
-    position: relative;
-    padding: 15rem 4rem 10rem;
-    background: linear-gradient(to bottom, transparent, var(--color-bg) 15%, var(--color-bg));
-    min-height: 120vh;
-    opacity: 1;
-    pointer-events: auto;
-    transition: opacity 1.5s ease;
-}
-
-.collections__header {
-    text-align: center;
-    margin-bottom: 8rem;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.collections.is-visible .collections__header {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.collections__title {
-    font-size: 1.8rem;
-    /* Reduced from 2.5rem */
-    font-weight: 600;
-    letter-spacing: 6px;
-    text-transform: uppercase;
-    margin-bottom: 2rem;
-}
-
-.collections__line {
-    width: 60px;
-    height: 1px;
-    background: var(--color-gold);
-    margin: 0 auto;
-    opacity: 0.5;
-}
-
-.collections__grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 3rem;
-    max-width: 1300px;
-    /* Tightened from 1600px */
-    margin: 0 auto;
-}
-
-.collection-card {
-    position: relative;
-    opacity: 0;
-    transform: translateY(50px);
-    transition: all 1.2s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.collections.is-visible .collection-card {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.collections.is-visible .collection-card:nth-child(2) {
-    transition-delay: 0.2s;
-}
-
-.collections.is-visible .collection-card:nth-child(3) {
-    transition-delay: 0.4s;
-}
-
-.collections.is-visible .collection-card:nth-child(4) {
-    transition-delay: 0.6s;
-}
-
-.collection-card__image-wrap {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 0.8;
-    margin-bottom: 2rem;
-    overflow: visible;
-    /* Allow drop shadow glow to exceed boundaries */
-    background: transparent;
-    transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.collection-card__image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    mix-blend-mode: screen;
-    filter: brightness(1) contrast(1);
-    transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-    border: none !important;
-    box-shadow: none !important;
-}
-
-.collection-card__content {
-    text-align: center;
-    transition: transform 0.6s ease;
-}
-
-.collection-card:hover .collection-card__image {
-    transform: scale(1.08) translateY(-10px);
-    /* Removed drop-shadow as requested */
-}
-
-/* Duplicate hero removed */
-
-.collection-card:hover .collection-card__content {
-    transform: translateY(-5px);
-}
-
-.collection-card__category {
-    font-size: 0.55rem;
-    /* Reduced from 0.65rem */
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: rgba(197, 164, 126, 0.6);
-    margin-bottom: 0.8rem;
-    display: block;
-}
-
-.collection-card__name {
-    font-size: 1rem;
-    /* Reduced from 1.1rem */
-    font-weight: 600;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-    line-height: 1.4;
-}
-
-.collection-card__link {
-    font-size: 0.6rem;
-    /* Smaller */
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--color-gold);
-    text-decoration: none;
-    position: relative;
-    padding-bottom: 10px;
-    transition: all 0.3s ease;
-    display: inline-block;
-}
-
-.collection-card__link::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: var(--color-gold);
-    transform: scaleX(0.2);
-    transform-origin: left;
-    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.collection-card:hover .collection-card__link::after {
-    transform: scaleX(1);
-}
-
-.collection-card:hover .collection-card__image {
-    transform: scale(1.1);
-}
-
-.collection-card:hover .collection-card__link::after {
-    transform: scaleX(1);
-}
+/* ==================== FAMILY HISTORY SECTION (Moved to histoire.css) ==================== */
 
 /* ==================== PARTICLES ==================== */
 .hero__particles {
@@ -546,274 +708,5 @@ body.is-revealed a {
 
     75% {
         transform: translateY(2px) rotate(2deg) scale(0.98);
-    }
-}
-
-/* ==================== TIMELINE ==================== */
-.vertical-timeline {
-    position: fixed;
-    right: 4rem;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10005;
-    /* Above overlay */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 6rem;
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.vertical-timeline.is-hidden {
-    opacity: 0;
-    transform: translateY(-40%) translateX(20px);
-    pointer-events: none;
-}
-
-.timeline__line {
-    position: absolute;
-    right: 4px;
-    /* Center with 8px marker */
-    top: 0;
-    width: 1px;
-    height: 100%;
-    background: rgba(197, 164, 126, 0.2);
-    z-index: 0;
-}
-
-.timeline__item {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    cursor: pointer;
-    z-index: 1;
-}
-
-.timeline__label {
-    font-size: 0.7rem;
-    letter-spacing: 2px;
-    color: var(--color-gold);
-    opacity: 0;
-    text-transform: uppercase;
-    transform: translateX(10px);
-    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.timeline__marker {
-    width: 8px;
-    height: 8px;
-    background: transparent;
-    border: 1px solid var(--color-gold);
-    transform: rotate(45deg);
-    transition: all 0.5s ease;
-}
-
-.timeline__item:hover .timeline__label {
-    opacity: 0.8;
-    transform: translateX(0);
-}
-
-.timeline__item:hover .timeline__marker {
-    background: var(--color-gold);
-    box-shadow: 0 0 10px rgba(197, 164, 126, 0.6);
-}
-
-/* ==================== HERITAGE GALLERY (STACK REVEAL) ==================== */
-.heritage-gallery {
-    position: relative;
-    width: 100%;
-    background: var(--color-bg);
-}
-
-.gallery__scroll-track {
-    height: 500vh;
-    /* Space for the 4-slide reveal journey */
-    position: relative;
-}
-
-.gallery__pin-container {
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-}
-
-.gallery__stack {
-    position: relative;
-    width: 100%;
-    height: 100%;
-}
-
-.gallery__slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    will-change: opacity, visibility;
-    padding: 0 5vw;
-}
-
-.gallery__slide-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    width: 100%;
-    max-width: 1000px;
-}
-
-/* Scaled down Logo */
-.gallery__slide-logo {
-    height: 60px;
-    /* Reduced from 80px */
-    object-fit: contain;
-    margin-bottom: 2.5rem;
-    filter: brightness(1.2);
-    opacity: 0.85;
-}
-
-/* Scaled down Bottle with Parallax */
-.gallery__slide-image-wrap {
-    height: 42vh;
-    /* Reduced from 50vh */
-    margin-bottom: 3rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: visible;
-}
-
-.gallery__slide-img {
-    height: 100%;
-    object-fit: contain;
-    mix-blend-mode: screen;
-    will-change: transform;
-    filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.5));
-}
-
-/* Action Button (Small & Refined) */
-.gallery__slide-footer {
-    margin-top: 1rem;
-}
-
-.gallery__btn {
-    display: inline-block;
-    padding: 0.9rem 3.2rem;
-    /* Reduced padding */
-    background: transparent;
-    border: 1px solid rgba(212, 197, 160, 0.4);
-    color: var(--color-gold);
-    text-decoration: none;
-    font-size: 0.6rem;
-    /* Smaller font */
-    font-weight: 500;
-    letter-spacing: 2.5px;
-    text-transform: uppercase;
-    transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.gallery__btn:hover {
-    background: var(--color-gold);
-    color: var(--color-bg);
-    border-color: var(--color-gold);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* Cinematic Black Curtain Reveal */
-.gallery__curtain {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    z-index: 1000;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-}
-
-.curtain__panel {
-    width: 100%;
-    height: 50%;
-    background: var(--color-bg);
-    /* Use site BG for seamless reveal */
-    will-change: transform;
-}
-
-.curtain__panel--top {
-    border-bottom: 1px solid rgba(212, 197, 160, 0.2);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-.curtain__panel--bottom {
-    border-top: 1px solid rgba(212, 197, 160, 0.2);
-    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
-}
-
-
-
-
-
-
-@media (max-width: 768px) {
-
-    /* Header, menu, and hero responsive styles moved to menu.css / hero.css */
-
-    .vertical-timeline {
-        display: none;
-    }
-
-    /* Collections Section Responsiveness */
-    .collections {
-        padding: 8rem 1.5rem 6rem;
-    }
-
-    .collections__header {
-        margin-bottom: 4rem;
-    }
-
-    .collections__title {
-        font-size: 1.3rem;
-        letter-spacing: 4px;
-    }
-
-    .collections__grid {
-        grid-template-columns: 1fr;
-        gap: 4rem;
-        max-width: 400px;
-        margin: 0 auto;
-    }
-
-    /* Gallery Section Responsiveness */
-    .gallery__slide {
-        padding: 0 1.5rem;
-    }
-
-    .gallery__slide-logo {
-        height: 40px;
-        margin-bottom: 1.5rem;
-    }
-
-    .gallery__slide-image-wrap {
-        height: 35vh;
-        margin-bottom: 2rem;
-    }
-
-    .gallery__btn {
-        padding: 0.7rem 2rem;
-        font-size: 0.55rem;
-        letter-spacing: 1.5px;
     }
 }

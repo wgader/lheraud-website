@@ -30,7 +30,7 @@ body.is-revealed .hero {
     font-size: 0.75rem;
     font-weight: 500;
     letter-spacing: 6px;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.6rem;
     text-transform: uppercase;
 }
 
@@ -41,15 +41,17 @@ body.is-revealed .hero {
 .hero__title {
     display: flex;
     flex-direction: column;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.4rem;
     align-items: center;
     /* Ensure signature is centered */
 }
 
-.hero__signature-container {
-    width: 100%;
-    max-width: 480px;
-    margin: 0rem auto 0;
+.hero__footer-signature {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 130px;
+    height: auto;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -97,12 +99,13 @@ body.is-revealed .hero {
 }
 
 .hero__subtitle {
+    display: block;
     font-family: var(--font-sans);
     font-size: 0.7rem;
-    font-weight: 500;
-    letter-spacing: 5px;
-    margin-top: 1.5rem;
-    margin-bottom: 2rem;
+    font-weight: 400;
+    letter-spacing: 10px;
+    margin-top: 0;
+    margin-bottom: 0.6rem;
     text-transform: uppercase;
 }
 
@@ -111,11 +114,11 @@ body.is-revealed .hero {
 }
 
 .hero__divider {
-    width: 1px;
+    width: 2px;
     height: 40px;
     background-color: var(--color-creme);
-    opacity: 0.35;
-    margin-bottom: 2rem;
+    opacity: 0.5;
+    margin-bottom: 1rem;
 }
 
 .hero__footer {
@@ -261,16 +264,23 @@ body.is-revealed .hero__footer {
     .hero__welcome {
         font-size: 0.65rem;
         letter-spacing: 4px;
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.4rem;
     }
 
     .hero__title {
         margin-bottom: 0px;
     }
 
-    .hero__signature-container {
-        max-width: 280px;
-        margin-top: 0.8rem;
+    div.hero__footer {
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    .hero__footer-signature {
+        position: static;
+        transform: none;
+        width: 110px;
+        margin-top: 0.2rem;
     }
 
     .hero__title-line {
@@ -281,13 +291,13 @@ body.is-revealed .hero__footer {
     .hero__subtitle {
         font-size: 0.6rem;
         letter-spacing: 3px;
-        margin-top: 1rem;
-        margin-bottom: 0.8rem;
+        margin-top: 0.4rem;
+        margin-bottom: 0.4rem;
     }
 
     .hero__divider {
         height: 25px;
-        margin-bottom: 1.2rem;
+        margin-bottom: 0.8rem;
     }
 
     .hero__footer {
@@ -301,8 +311,7 @@ body.is-revealed .hero__footer {
     }
 
     .hero__socials {
-        justify-content: center;
-        gap: 1rem;
+        display: none;
     }
 
     .hero__coords {

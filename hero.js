@@ -914,7 +914,9 @@ document.addEventListener('DOMContentLoaded', () => {
             cursor.style.transform = `translate3d(${holeX - holeW / 2}px, ${holeY - holeH / 2}px, 0)`;
         }
 
-        const shouldHideCursor = isMobile || (window.scrollY > 300) || (revealState === 'open') || (webglActive && revealState === 'opening');
+        const menuOverlay = document.getElementById('menu-overlay');
+        const isMenuOpen = menuOverlay ? menuOverlay.classList.contains('menu-overlay--open') : false;
+        const shouldHideCursor = isMobile || (window.scrollY > 300) || (revealState === 'open') || (webglActive && revealState === 'opening') || isMenuOpen;
         if (cursor) {
             if (shouldHideCursor) {
                 cursor.style.display = 'none';
