@@ -168,8 +168,8 @@
     margin: 0 0 clamp(0.8rem, 1.4vw, 1.4rem);
 }
 
-/* CTA — reuses .btn .btn--framed but slightly smaller */
-.collection-card__btn.btn--framed {
+/* CTA — reuses .btn-frame but slightly smaller */
+.collection-card__btn.btn-frame {
     font-size: 0.55rem;
     padding: 0.72rem 1.75rem;
     letter-spacing: 1.8px;
@@ -208,7 +208,7 @@
         font-size: clamp(0.9rem, 4.5vw, 1.25rem);
     }
 
-    .collection-card__btn.btn--framed {
+    .collection-card__btn.btn-frame {
         font-size: 0.5rem;
         padding: 0.65rem 1.4rem;
     }

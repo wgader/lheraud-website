@@ -1,0 +1,269 @@
+/* ==========================================================================
+   SECTION ESPRIT DU TEMPS — MAISON LHERAUD
+   ========================================================================== */
+
+/* Load Penumbra Sans Std regular & bold fonts from project assets */
+@font-face {
+    font-family: 'Penumbra Sans Std';
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Sans Std Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Penumbra Sans Std';
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Sans Std Semibold.otf') format('opentype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Penumbra Sans Std';
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Sans Std Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+.esprit {
+    position: relative;
+    background-color: var(--color-bg);
+    padding: 6rem 4rem;
+    overflow: hidden;
+}
+
+.esprit__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* Left Column: Image with offset gold lines */
+.esprit__image-col {
+    flex: 0 0 45%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+
+.esprit__image-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+    /* scaled down from 550px for a more compact 90% view */
+    padding: 20px 0;
+    /* vertical gap (petit vide) for the lines to sit cleanly above/below the image */
+}
+
+.esprit__image-wrapper img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+    filter: grayscale(10%) contrast(102%);
+    transition: filter 0.4s ease;
+}
+
+.esprit__image-wrapper:hover img {
+    filter: grayscale(0%) contrast(105%);
+}
+
+/* Centered gold lines (height 5px, width 75%) with vertical gaps */
+.esprit__image-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    /* sits at the very top of the padding space, 20px above the image */
+    left: 50%;
+    transform: translateX(-50%);
+    /* perfectly centered horizontally */
+    width: 75%;
+    /* leaves a clean horizontal gap on both sides */
+    height: 5px;
+    background-color: var(--color-gold);
+    z-index: 2;
+}
+
+.esprit__image-wrapper::after {
+    content: '';
+    position: absolute;
+    bottom: 15px;
+    /* sits at the very bottom of the padding space, 20px below the image */
+    left: 50%;
+    transform: translateX(-50%);
+    /* perfectly centered horizontally */
+    width: 75%;
+    /* leaves a clean horizontal gap on both sides */
+    height: 5px;
+    background-color: var(--color-gold);
+    z-index: 2;
+}
+
+/* Right Column: Text content */
+.esprit__text-col {
+    flex: 0 0 50%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Category header: NOTRE HISTOIRE ————————— */
+.esprit__category-container {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.esprit__category {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    /* Medium */
+    font-size: 0.75rem;
+    /* 12px, scaled down from 13px */
+    letter-spacing: 2px;
+    color: var(--color-beige);
+    /* Beige / Creme */
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.esprit__category-line {
+    height: 1px;
+    flex-grow: 1;
+    background-color: var(--color-gold);
+    /* Gold color bar next to NOTRE HISTOIRE */
+    opacity: 0.45;
+}
+
+/* Title block */
+.esprit__title {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.8rem;
+}
+
+.esprit__title-main {
+    font-family: 'Penumbra Sans Std', sans-serif;
+    font-size: 2rem;
+    /* 32px, scaled down from 36px */
+    font-weight: 600;
+    /* Semibold */
+    color: var(--color-gold);
+    /* Gold */
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    line-height: 1.1;
+}
+
+.esprit__title-sub {
+    font-family: var(--font-serif);
+    font-size: 4rem;
+    /* 64px, scaled down from 72px */
+    font-weight: 300;
+    /* Light */
+    font-style: italic;
+    /* Italic */
+    color: var(--color-creme);
+    /* Creme */
+    line-height: 0.85;
+    /* Tight line-height */
+    margin-top: 0.1rem;
+}
+
+/* Description text block */
+.esprit__desc {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.esprit__desc p {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    /* 14px, scaled down from 15px */
+    line-height: 1.6;
+    color: var(--color-beige);
+}
+
+.esprit__desc p.esprit__para-bold {
+    font-weight: 700;
+    /* Bold */
+}
+
+.esprit__desc p.esprit__para-regular {
+    font-weight: 400;
+    /* Regular */
+    opacity: 0.85;
+}
+
+.esprit__desc p.esprit__highlight-gold {
+    font-size: 1rem;
+    /* 16px, scaled down from 18px */
+    font-weight: 700;
+    /* Bold */
+    color: var(--color-gold);
+    /* Gold */
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    line-height: 1.5;
+    margin: 0.2rem 0;
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+    .esprit__container {
+        gap: 3rem;
+    }
+
+    .esprit__title-sub {
+        font-size: 3.8rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .esprit {
+        padding: 6rem 2rem;
+    }
+
+    .esprit__container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4rem;
+    }
+
+    .esprit__image-col {
+        flex: none;
+        width: 100%;
+        max-width: 550px;
+        margin: 0 auto;
+    }
+
+    .esprit__text-col {
+        flex: none;
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .esprit {
+        padding: 5rem 1.5rem;
+    }
+
+    .esprit__title-main {
+        font-size: 1.8rem;
+    }
+
+    .esprit__title-sub {
+        font-size: 3rem;
+    }
+
+    .esprit__desc p.esprit__highlight-gold {
+        font-size: 1rem;
+    }
+}

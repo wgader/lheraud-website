@@ -1,1 +1,0 @@
-// Legacy script file - logic migrated to histoire.js

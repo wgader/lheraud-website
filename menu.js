@@ -147,4 +147,115 @@ document.addEventListener('DOMContentLoaded', () => {
             header.classList.toggle('has-bg', window.scrollY > 50 || isMenuOpen || isRevealed);
         }
     });
+
+    // ─── .btn-frame hover border animation ───────────────────────────
+    // Adjustable settings
+    const SEG_FRAC = 0.38;   // fraction of half-perimeter for each thick dash at rest
+
+    /**
+     * setupBtn — initialise one .btn-frame element.
+     * Creates the SVG overlay, computes geometry, wires hover listeners.
+     */
+    function setupBtn(el) {
+        const ns = 'http://www.w3.org/2000/svg';
+
+        /* ── build SVG skeleton ── */
+        const svg = document.createElementNS(ns, 'svg');
+        svg.setAttribute('class', 'btn-frame__svg');
+        svg.setAttribute('preserveAspectRatio', 'none');
+
+        // Draw the thin rect as a path to prevent alignment discrepancies between rect and path rendering
+        const rectEl = document.createElementNS(ns, 'path');
+        rectEl.setAttribute('class', 'btn-frame__rect');
+
+        // Two thick paths: one starts top-center going right, other starts bottom-center going left
+        const segA = document.createElementNS(ns, 'path');  // top → right → bottom
+        segA.setAttribute('class', 'btn-frame__seg');
+
+        const segB = document.createElementNS(ns, 'path');  // bottom → left → top
+        segB.setAttribute('class', 'btn-frame__seg');
+
+        svg.append(rectEl, segA, segB);
+        el.appendChild(svg);
+
+        /* ── geometry helpers ── */
+        let halfPerim = 0, seg = 0;
+
+        function measure() {
+            const rect = el.getBoundingClientRect();
+            const w = rect.width;
+            const h = rect.height;
+
+            svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+            // Coordinates centered on the 1px / 3px strokes
+            const cx = w / 2;   // center x
+            const r  = w - 0.5; // right edge
+            const b  = h - 0.5; // bottom edge
+            const l  = 0.5;     // left edge
+            const t  = 0.5;     // top edge
+
+            // Thin frame path
+            const dRect = `M ${l} ${t} L ${r} ${t} L ${r} ${b} L ${l} ${b} Z`;
+            rectEl.setAttribute('d', dRect);
+
+            // segA path: top-center → top-right corner → bottom-right corner → bottom-center
+            const dA = `M ${cx} ${t} L ${r} ${t} L ${r} ${b} L ${cx} ${b}`;
+            // segB path: bottom-center → bottom-left corner → top-left corner → top-center
+            const dB = `M ${cx} ${b} L ${l} ${b} L ${l} ${t} L ${cx} ${t}`;
+
+            segA.setAttribute('d', dA);
+            segB.setAttribute('d', dB);
+
+            // half perimeter length (safe bounds for offscreen/hidden buttons)
+            halfPerim = Math.max(0, w - 1) + Math.max(0, h - 1);
+            seg = halfPerim * SEG_FRAC;
+
+            // Apply dasharray: [seg/2 visible] [rest invisible] [seg/2 visible]
+            const dashRest = `${seg / 2} ${halfPerim - seg} ${seg / 2}`;
+            segA.style.strokeDasharray = dashRest;
+            segB.style.strokeDasharray = dashRest;
+
+            // If currently hovered, keep hovered state
+            if (el.matches(':hover')) {
+                applyHover();
+            } else {
+                applyRest();
+            }
+        }
+
+        function applyRest() {
+            const dashRest = `${seg / 2} ${halfPerim - seg} ${seg / 2}`;
+            segA.style.strokeDasharray = dashRest;
+            segB.style.strokeDasharray = dashRest;
+        }
+
+        function applyHover() {
+            // Entire half-perimeter becomes thick
+            const dashHover = `${halfPerim} 0 0`;
+            segA.style.strokeDasharray = dashHover;
+            segB.style.strokeDasharray = dashHover;
+        }
+
+        /* ── events ── */
+        el.addEventListener('mouseenter', applyHover);
+        el.addEventListener('mouseleave', applyRest);
+
+        /* ── resize observer with subpixel support ── */
+        let prevW = 0, prevH = 0;
+        const ro = new ResizeObserver(() => {
+            const rect = el.getBoundingClientRect();
+            const w = rect.width, h = rect.height;
+            if (Math.abs(w - prevW) < 0.5 && Math.abs(h - prevH) < 0.5) return;
+            prevW = w; prevH = h;
+            measure();
+        });
+        ro.observe(el);
+
+        // initial measure
+        measure();
+    }
+
+    /* ── init all .btn-frame buttons ── */
+    document.querySelectorAll('.btn-frame').forEach(setupBtn);
 });

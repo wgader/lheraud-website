@@ -1,0 +1,374 @@
+/* ==========================================================================
+   SECTION MONDE — MAISON LHERAUD
+   ========================================================================== */
+
+/* Load Penumbra Sans Std regular & bold fonts from project assets */
+@font-face {
+    font-family: 'Penumbra Sans Std';
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Sans Std Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Penumbra Sans Std';
+    src: url('assets/font/Penumbra_Font_Family/Penumbra Sans Std Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+.monde {
+    position: relative;
+    background-color: var(--color-bg);
+    padding: 8rem 4rem;
+    overflow: hidden;
+}
+
+.monde__container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* Watermark Background Signature */
+.monde__watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    height: 90%;
+    background-image: url('assets/image/signature-lheraud.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: contain;
+    opacity: 0.05;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Left Column: Text content */
+.monde__text-col {
+    flex: 0 0 35%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.monde__subtitle {
+    font-family: var(--font-sans);
+    font-size: 2.2500rem;
+    font-weight: 600;
+    letter-spacing: 4px;
+    color: var(--color-gold);
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+    display: block;
+    line-height: 1.1;
+}
+
+.monde__title {
+    font-family: var(--font-serif);
+    font-size: clamp(2.5rem, 5.5vw, 78px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--color-creme);
+    margin-top: 0.2rem;
+    margin-bottom: 3rem;
+    line-height: 0.85;
+}
+
+.monde__desc {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.monde__desc p {
+    font-family: var(--font-sans);
+    font-size: clamp(14px, 1.1vw, 15px);
+    font-weight: 400;
+    line-height: 1.65;
+    color: var(--color-beige);
+}
+
+.monde__desc p.monde__highlight {
+    font-family: var(--font-sans);
+    font-size: clamp(13px, 1vw, 14px);
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--color-gold);
+    text-transform: uppercase;
+    line-height: 1.8;
+    margin-top: 1.2rem;
+}
+
+.monde__grid-col {
+    flex: 0 0 60%;
+}
+
+.monde__grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 100px;
+}
+
+.monde__row {
+    display: flex;
+    justify-content: center;
+    gap: 2.2rem;
+    width: 100%;
+}
+
+.monde__row--2 {
+    margin-top: -5.8rem;
+}
+
+.monde__row--3 {
+    margin-top: -5.8rem;
+}
+
+.monde__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 157px;
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.3, 1);
+}
+
+.monde__item:hover {
+    transform: translateY(-6px) scale(1.03);
+}
+
+.monde__barrel {
+    width: 157px;
+    height: 157px;
+    /* margin-bottom: 0.8rem; */
+    position: relative;
+}
+
+.monde__barrel img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: grayscale(10%) contrast(105%);
+    transition: filter 0.4s ease;
+}
+
+.monde__item:hover .monde__barrel img {
+    filter: grayscale(0%) contrast(110%);
+}
+
+.monde__label {
+    text-align: center;
+    width: 180px;
+    pointer-events: none;
+}
+
+.monde__item-title {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--color-beige);
+    line-height: 1.25;
+    margin-bottom: 0.3rem;
+}
+
+.monde__item-subtitle {
+    font-family: 'Penumbra Sans Std', sans-serif;
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--color-gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    line-height: 1.2;
+}
+
+.font-caps {
+    font-size: 12px;
+}
+
+@media (max-width: 1200px) {
+    .monde__container {
+        gap: 2rem;
+    }
+
+    .monde__text-col {
+        flex: 0 0 40%;
+    }
+
+    .monde__grid-col {
+        flex: 0 0 55%;
+    }
+
+    .monde__row {
+        gap: 1.2rem;
+    }
+
+    .monde__item {
+        width: 130px;
+    }
+
+    .monde__barrel {
+        width: 130px;
+        height: 130px;
+    }
+
+    .monde__row--2 {
+        margin-top: -4.8rem;
+    }
+
+    .monde__row--3 {
+        margin-top: -4.8rem;
+    }
+
+    .monde__item-title {
+        font-size: 14px;
+    }
+
+    .monde__item-subtitle {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 992px) {
+    .monde {
+        padding: 6rem 2rem;
+    }
+
+    .monde__container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4rem;
+    }
+
+    .monde__text-col {
+        flex: none;
+        text-align: center;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .monde__grid-col {
+        flex: none;
+        width: 100%;
+    }
+
+    .monde__row {
+        gap: 2.2rem;
+    }
+
+    .monde__item {
+        width: 157px;
+    }
+
+    .monde__barrel {
+        width: 157px;
+        height: 157px;
+    }
+
+    .monde__row--2 {
+        margin-top: -5.8rem;
+    }
+
+    .monde__row--3 {
+        margin-top: -5.8rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .monde__row {
+        gap: 1.2rem;
+    }
+
+    .monde__item {
+        width: 120px;
+    }
+
+    .monde__barrel {
+        width: 120px;
+        height: 120px;
+    }
+
+    .monde__row--2 {
+        margin-top: - 4.4rem;
+    }
+
+    .monde__row--3 {
+        margin-top: -4.4rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .monde {
+        padding: 5rem 1.5rem;
+    }
+
+    .monde__subtitle {
+        font-size: 26px;
+    }
+
+    .monde__title {
+        margin-bottom: 1.8rem;
+    }
+
+    /* Convert staggered Flex Rows into a standard CSS grid for perfect mobile layout */
+    .monde__grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: -32px;
+    }
+
+    .monde__row {
+        display: contents;
+        /* flat layout to integrate into the grid */
+    }
+
+    .monde__item {
+        width: 100%;
+        margin-top: 0 !important;
+        /* reset staggered margins */
+    }
+
+    .monde__barrel {
+        width: 85px;
+        height: 85px;
+        margin-bottom: 0.5rem;
+    }
+
+    .monde__label {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .monde__item-title {
+        font-size: 13px;
+    }
+
+    .monde__item-subtitle {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 450px) {
+    .monde__grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .monde__barrel {
+        width: 100px;
+        height: 100px;
+    }
+
+    .monde__title {
+        width: 100%;
+    }
+}

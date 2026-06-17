@@ -1,0 +1,166 @@
+/* ==========================================================================
+   SECTION MANTRA — MAISON LHERAUD
+   ========================================================================== */
+
+.mantra {
+    position: relative;
+    background-color: var(--color-bg);
+    padding: 6rem 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+}
+
+/* Side Images positioning and blending */
+.mantra__side-img {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 35%;
+    max-width: 380px;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.5;
+    /* increased opacity for better visibility */
+    /* filter: grayscale(10%) brightness(0.85); */
+    /* cleaner, brighter look */
+}
+
+.mantra__side-img--left {
+    left: 0;
+    mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%);
+}
+
+.mantra__side-img--right {
+    right: 0;
+    mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0) 100%);
+}
+
+.mantra__content {
+    max-width: 800px;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Gold Feather Icon */
+.mantra__icon {
+    width: 30px;
+    height: auto;
+    margin-bottom: 1.5rem;
+}
+
+/* Quote Layout */
+.mantra__quote {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    margin-bottom: 2.2rem;
+}
+
+.mantra__quote-line {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    /* Light */
+    font-style: italic;
+    /* Italic */
+    font-size: clamp(1.6rem, 2.5vw, 2.25rem);
+    /* 36px on desktop (2.25rem), scaled down 90% */
+    line-height: 1.25;
+}
+
+.mantra__quote-line--beige {
+    color: var(--color-creme);
+    /* Beige / Creme */
+}
+
+.mantra__quote-line--gold {
+    color: var(--color-gold);
+    /* Gold */
+}
+
+/* Author Signature Container: —— MAISON LHÉRAUD —— */
+.mantra__author-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+}
+
+.mantra__line {
+    height: 1px;
+    width: 50px;
+    background-color: var(--color-creme);
+    opacity: 0.3;
+}
+
+.mantra__author {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    /* Medium */
+    font-size: 0.875rem;
+    /* 14px on desktop, scaled down 90% */
+    letter-spacing: 0.4375rem;
+    /* 50% letter-spacing (approx 7px) */
+    color: var(--color-beige);
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding-left: 0.4375rem;
+    /* offset the right letter-spacing for perfect centering */
+}
+
+/* Responsive Styles */
+@media (max-width: 992px) {
+    .mantra__side-img {
+        width: 20%;
+        opacity: 0.25;
+    }
+}
+
+@media (max-width: 768px) {
+    .mantra {
+        padding: 5rem 1.5rem;
+    }
+
+    .mantra__side-img {
+        display: none;
+        /* Hide side images on tablet and mobile for layout readability */
+    }
+
+    .mantra__quote {
+        margin-bottom: 2rem;
+    }
+
+    .mantra__line {
+        width: 35px;
+    }
+
+    .mantra__author {
+        font-size: 0.8rem;
+        letter-spacing: 0.25rem;
+        padding-left: 0.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mantra {
+        padding: 4.5rem 1rem;
+    }
+
+    .mantra__quote {
+        gap: 0.4rem;
+    }
+
+    .mantra__line {
+        display: none;
+        /* hide lines on very small screens to fit text */
+    }
+}
